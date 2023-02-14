@@ -1,0 +1,90 @@
+
+
+//ユーザテーブル
+CREATE TABLE user_tbl(
+    user_id         INT             AUTO_INCREMENT  ,
+    user_pass       VARCHAR(30)     NOT NULL        ,
+    user_mail       VARCHAR(50)     NOT NULL        ,
+    PRIMARY KEY     (user_id)
+);
+
+//Todoテーブル
+CREATE TABLE todo_tbl(
+    todo_id         INT             AUTO_INCREMENT  ,
+    todo_title      VARCHAR(100)    NOT NULL        ,
+    todo_message    VARCHAR(300)    NOT NULL        ,
+    todo_state      VARCHAR(100)    NOT NULL        ,
+    user_id         INT             NOT NULL        ,
+    group_id        INT             NOT NULL        ,
+    genre_id        INT             NOT NULL        ,
+    image_id        INT                             ,
+    deadline        TIMESTAMP       NOT NULL        ,
+    rank            VARCHAR(10)     NOT NULL        ,
+    comment         VARCHAR(100)                    ,
+    PRIMARY KEY     (todo_id),
+    FOREIGN KEY (user_id) REFERENCES user_tbl(user_id),
+    FOREIGN KEY (group_id) REFERENCES gruop_tbl(group_id)
+);
+
+//ジャンルテーブル
+CREATE TABLE genre_tbl(
+    genre_id         INT             AUTO_INCREMENT  ,
+    genre_name       VARCHAR(100)    NOT NULL        ,
+    genre_color      VARCHAR(14)     NOT NULL        ,
+    PRIMARY KEY     (genre_id)
+);
+
+//グループテーブル
+CREATE TABLE group_tbl(
+    group_id         INT             AUTO_INCREMENT  ,
+    group_name       VARCHAR(100)    NOT NULL        ,
+    user_count       VARCHAR(50)     NOT NULL        ,
+    PRIMARY KEY     (group_id)
+);
+
+//所属グループテーブル
+CREATE TABLE affiliation_tbl(
+    affiliation_id   INT             AUTO_INCREMENT  ,
+    group_id         INT             NOT NULL        ,
+    user_id          INT             NOT NULL        ,
+    PRIMARY KEY     (affiliation_id),
+    FOREIGN KEY (group_id) REFERENCES group_tbl(group_id),
+    FOREIGN KEY (user_id) REFERENCES user_tbl(user_id)
+);
+
+//称号テーブル
+CREATE TABLE title_tbl(
+    title_id         INT             AUTO_INCREMENT  ,
+    title_name       VARCHAR(100)    NOT NULL        ,
+    get_conditions   VARCHAR(300)    NOT NULL        ,
+    PRIMARY KEY     (title_id)
+);
+
+//実績テーブル
+CREATE TABLE achievement_tbl(
+    achievement_id   INT             AUTO_INCREMENT  ,
+    title_id         INT             NOT NULL        ,
+    user_id          INT             NOT NULL        ,
+    PRIMARY KEY     (achievement_id),
+    FOREIGN KEY (title_id) REFERENCES title_tbl(title_id),
+    FOREIGN KEY (user_id) REFERENCES user_tbl(user_id)
+);
+
+//プロフィール
+CREATE TABLE profile_tbl(
+    profile_id       INT             AUTO_INCREMENT  ,
+    achievement_id   INT             NOT NULL        ,
+    image_id         INT             NOT NULL        ,
+    user_id          INT             NOT NULL        ,
+    PRIMARY KEY     (achievement_id),
+    FOREIGN KEY (achievement_id) REFERENCES achievement_tbl(achievement_id),
+    FOREIGN KEY (image_id) REFERENCES image_tbl(image_id),
+    FOREIGN KEY (user_id) REFERENCES user_tbl(user_id)
+);
+
+//画像テーブル
+CREATE TABLE image_tbl(
+    image_id         INT             AUTO_INCREMENT  ,
+    image_pass       VARCHAR(100)    NOT NULL        ,
+    PRIMARY KEY     (image_id)
+);
