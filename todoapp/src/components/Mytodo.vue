@@ -12,18 +12,22 @@
       <label class="tab_item" for="programming">仮完了</label>
       <input id="design" type="radio" name="tab_item">
       <label class="tab_item" for="design">完了</label>
-        <div class="tab_content" id="mi_content">
+        <div class="tab_content" id="mi_content" v-for="todo in todos" :key="todo">
           <div class="mikanryou">
-            <h3>チャーハン材料</h3>
-            <p>期限日：〇月〇日</p>
-            <p>ランク：A</p>
-            <p>完了条件：ネギ、卵、ベーコンを買ってくる</p>
-            <p>掲示板許可：ON</p>
+            <h3>{{ todo.title }}</h3>
+            <p>期限日：{{ todo.day }}</p>
+            <p>ランク：{{ todo.rank }}</p>
+            <p>ジャンル：{{ todo.janru }}</p>
+            <p>掲示板許可：{{ todo.keiji }}</p>
+            <p>完了条件：{{ todo.jouken }}</p>
+            <p class="syousai">詳細：{{ todo.shousai }}</p>
             <div class="button_area">
               <button class="button kan">完了</button>
               <paper-ripple fit></paper-ripple>
               <button class="button saku">削除</button>
             </div>
+            <img src="./PNG/sita.png" alt="" class="sita">
+            <img src="./PNG/ue.png" alt="" class="ue" >
           </div>
         </div>
         <div class="tab_content" id="kari_content">
@@ -40,14 +44,46 @@
   </div>
 </template>
 <script setup>
+import {reactive} from 'vue'
+let todos = ([
+  {
+    todo_id:1,
+  title:'チャーハン材料',
+  state:'未完了',
+  day:'２月２日',
+  rank:'A',
+  jouken:'ネギ、卵、ベーコンを買ってくる',
+  keiji:'ON',
+  janru:'買い物',
+  shousai:'ネギは緑色が濃ゆいものを買ってください。卵は１０個入りをお願いします。ベーコンはぷろっくのもので、２５０円くらいのものをお願いします。'
+  },
+  {
+    todo_id:2,
+  title:'日用品を買う',
+  state:'完了',
+  day:'２月１３日',
+  rank:'B',
+  jouken:'シャンプー、コンディショナーを買ってくる',
+  keiji:'ON',
+  janru:'買い物',
+  shousai:'ひまわりのやつをお願いします。あったらモウのアイスもｗ'
+  }
+])
+
+let hyouzi = reactive([true])
 </script>
 <style scoped>
 select {
   appearance: none;
-  width: 40%;
+  width: 20%;
   padding: 10px;
   border: 1px solid #999;
   background: #eee;
+  text-align: center;
+  margin-left: 75%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  border-radius: 10px;
 }
 /*タブ切り替え全体のスタイル*/
 .tabs {
@@ -112,7 +148,7 @@ input[name="tab_item"] {
 }
 .button_area{
   position: absolute;
-  top:2vw;
+  top:0vw;
   left:55vw;
   width: 23vw;
   height: 12vh;
@@ -126,4 +162,27 @@ input[name="tab_item"] {
       color: white;
       margin-top: 2vw;
     }
+    h3{
+      margin-left: 4vw;
+    }
+    p{
+      margin-top: 0;
+      margin-bottom: 0;
+      margin-left: 4vw;
+      margin-right: 2vw;
+      border-bottom:2px solid #999;
+    }
+    .sita{
+      width: 5vw;
+      position: absolute;
+      top:53vw;
+      left: 70vw;
+    }
+    .ue{
+      width: 5vw;
+      position: absolute;
+      top:53vw;
+      left: 70vw;
+    }
+    
 </style>
