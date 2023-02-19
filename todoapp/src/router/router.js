@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Hello from '../components/Hello.vue';
 import Achievement from '../components/Achievement.vue'
-import Achievement from '../components/Achievement.vue'
+import CompletionPost from '../components/CompletionPost.vue'
 
 const routes = [
   {
@@ -13,8 +13,8 @@ const routes = [
     component: Achievement,
   },
   {
-    path: '/achievement',
-    component: Achievement,
+    path: '/completionpost',
+    component: CompletionPost,
   },
 ]
 
