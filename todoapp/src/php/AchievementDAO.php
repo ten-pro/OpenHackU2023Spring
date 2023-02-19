@@ -37,4 +37,31 @@ class Achievement
         }
         return $data;
     }
+
+    function get_achievement($user_id)
+    {
+        try {
+            $pdo = $this->get_pdo();
+
+            $sql =  "SELECT * FROM achievement_tbl WHERE user_id = ?";
+            $ps = $pdo->prepare($sql);
+            $ps->bindValue(1, $user_id, PDO::PARAM_INT);
+            $ps->execute();
+            $search = $ps->fetchAll();
+            if ($search != null) {
+                foreach ($search as $row) {
+                    $data = array('id' => $row['user_id'],'name' => $row['user_name'], 'chk' => true);
+                }
+            } else {
+                $data = false;
+            }
+
+            
+        } catch (Exception $e) {
+            $data = $e;
+        } catch (Error $e) {
+            $data = $e;
+        }
+        return $data;
+    }
 }

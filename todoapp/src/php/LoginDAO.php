@@ -51,7 +51,9 @@ class Login
             $ps->execute();
             $search = $ps->fetchAll();
             if ($search != null) {
-                $data = true;
+                foreach ($search as $row) {
+                    $data = array('id' => $row['user_id'],'name' => $row['user_name'], 'chk' => true);
+                }
             } else {
                 $data = false;
             }

@@ -20,7 +20,7 @@ class Title
             $search = $ps->fetchAll();
 
             if ($search == null) {
-                $sql2 = "INSERT INTO user_tbl (title_name,title_conditions) VALUE (?,?);";
+                $sql2 = "INSERT INTO title_tbl (title_name,title_conditions) VALUE (?,?);";
                 $ps = $pdo->prepare($sql2);
                 $ps->bindValue(1, $name, PDO::PARAM_STR);
                 $ps->bindValue(2, $conditions, PDO::PARAM_STR);

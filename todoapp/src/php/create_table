@@ -4,7 +4,10 @@
 CREATE TABLE user_tbl(
     user_id         INT             AUTO_INCREMENT  ,
     user_pass       VARCHAR(30)     NOT NULL        ,
+    user_name       VARCHAR(30)     NOT NULL        ,
     user_mail       VARCHAR(50)     NOT NULL        ,
+    achievement_id   INT                             ,
+    image_id         INT                             ,
     PRIMARY KEY     (user_id)
 );
 
@@ -57,7 +60,7 @@ CREATE TABLE affiliation_tbl(
 CREATE TABLE title_tbl(
     title_id         INT             AUTO_INCREMENT  ,
     title_name       VARCHAR(100)    NOT NULL        ,
-    get_conditions   VARCHAR(300)    NOT NULL        ,
+    title_conditions   VARCHAR(300)    NOT NULL        ,
     PRIMARY KEY     (title_id)
 );
 
@@ -71,21 +74,21 @@ CREATE TABLE achievement_tbl(
     FOREIGN KEY (user_id) REFERENCES user_tbl(user_id)
 );
 
-//プロフィール
-CREATE TABLE profile_tbl(
-    profile_id       INT             AUTO_INCREMENT  ,
-    achievement_id   INT             NOT NULL        ,
-    image_id         INT             NOT NULL        ,
-    user_id          INT             NOT NULL        ,
-    PRIMARY KEY     (profile_id),
-    FOREIGN KEY (achievement_id) REFERENCES achievement_tbl(achievement_id),
-    FOREIGN KEY (image_id) REFERENCES image_tbl(image_id),
-    FOREIGN KEY (user_id) REFERENCES user_tbl(user_id)
-);
 
 //画像テーブル
 CREATE TABLE image_tbl(
     image_id         INT             AUTO_INCREMENT  ,
     image_pass       VARCHAR(100)    NOT NULL        ,
     PRIMARY KEY     (image_id)
+);
+
+
+//プロフィールテーブル（ユーザテーブルにカラムを追加するだけでよかったため削除）
+CREATE TABLE profile_tbl(
+    profile_id       INT             AUTO_INCREMENT  ,
+    achievement_id   INT                             ,
+    image_id         INT                             ,
+    user_id          INT             NOT NULL        ,
+    PRIMARY KEY     (profile_id),
+    FOREIGN KEY (user_id) REFERENCES user_tbl(user_id)
 );
