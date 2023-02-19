@@ -10,6 +10,7 @@ import OneAchievement from './achievement/OneAchievement.vue'
 .wrap{
     width:100vw;
     height:80.5vh;
+    padding: 3vh;
     background-color: aqua;
     overflow: auto;
 }
