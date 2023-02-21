@@ -30,9 +30,10 @@ axios
     margin-top:2vh;
     border-radius: 50px;
     font-size:2.5vh;
-    border: solid 0.7vw black;
-    background-color: #33CFC6;
-    color:white;
+    border: solid 0.7vw #33CFC6;
+    background-color: #ffffff;
+    color:#000000;
+    font-weight: bold;
 }
 </style>
   

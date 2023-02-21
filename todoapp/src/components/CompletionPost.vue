@@ -45,23 +45,6 @@ const uploadFile = () => {
       // handle error response
       console.error(error);
     });
-//   axios.post('http://mp-class.chips.jp/group_task/upload.php', {
-//     formData:formData,
-//     user_id:1,
-//     todo_id:1
-//     }, {
-//         headers: {
-//             'Content-Type': 'multipart/form-data'
-//         }
-//     })
-//     .then(response => {
-//       // handle success response
-//       console.log(response.data);
-//     })
-//     .catch(error => {
-//       // handle error response
-//       console.error(error);
-//     });
 }
 
 // use defineExpose function to explicitly expose properties and methods to template
@@ -80,6 +63,7 @@ const previewImage = (obj) => {
 <style scoped>
 .return{
   margin-top:3vh;
+  margin-left:5vw;
   display: flex;
   justify-content: center;
   align-items: center;
