@@ -8,6 +8,7 @@ header('Content-Type: application/json; charset=UTF-8');
 //DAOの読み込み
 require_once './LoginDAO.php';
 require_once './TitleDAO.php';
+require_once './Todo.php';
 
 
 $data = false;
@@ -27,7 +28,13 @@ if (isset($_POST['create_user']) == true) {
 //create_todoの引数がある時の処理
 if (isset($_POST['create_todo']) == true) {
     $class = new Todo();
-    $data = $class->create_todo($_POST['title'], $_POST['message'], $_POST['user_id'], $_POST['group_id'], $_POST['genre_id'], $_POST['deadline'], $_POST['rank'], $_POST['comment'], $_POST['permission'], $_POST['todo_condition']);
+    $data = $class->create_todo($_POST['title'], $_POST['message'], $_POST['user_id'], $_POST['group_id'], $_POST['genre_id'], $_POST['deadline'], $_POST['rank'], $_POST['permission'], $_POST['todo_condition']);
+}
+
+//request_todoの引数がある時の処理
+if (isset($_POST['request_todo']) == true) {
+    $class = new Todo();
+    $data = $class->request_todo($_POST['image_id'],$_POST['todo_id'],$_POST['user_id']);
 }
 
 //create_titleの引数がある時の処理
@@ -46,6 +53,72 @@ if (isset($_POST['create_achievement']) == true) {
 if (isset($_POST['create_genre']) == true) {
     $class = new Todo();
     $data = $class->create_genre($_POST['name'], $_POST['color']);
+}
+
+//create_groupの引数がある時の処理
+if (isset($_POST['create_group']) == true) {
+    $class = new Todo();
+    $data = $class->create_group($_POST['name'], $_POST['user_id']);
+}
+
+//rename_groupの引数がある時の処理
+if (isset($_POST['rename_group']) == true) {
+    $class = new Todo();
+    $data = $class->rename_group($_POST['group_id'],$_POST['group_name'],$_POST['user_id']);
+}
+
+//get_usernameの引数がある時の処理
+if (isset($_POST['get_username']) == true) {
+    $class = new Login();
+    $data = $class->get_username($_POST['user_id']);
+}
+
+//add_affiliationの引数がある時の処理
+if (isset($_POST['add_affiliation']) == true) {
+    $class = new Todo();
+    $data = $class->add_affiliation($_POST['group_id'],$_POST['user_id']);
+}
+
+//delete_affiliationの引数がある時の処理
+if (isset($_POST['delete_affiliation']) == true) {
+    $class = new Todo();
+    $data = $class->delete_affiliation($_POST['group_id'],$_POST['user_id']);
+}
+
+//get_group_userlistの引数がある時の処理
+if (isset($_POST['get_group_userlist']) == true) {
+    $class = new Todo();
+    $data = $class->get_group_userlist($_POST['group_id']);
+}
+
+//get_completionlistの引数がある時の処理
+if (isset($_POST['get_completionlist']) == true) {
+    $class = new Todo();
+    $data = $class->get_completionlist($_POST['group_id']);
+}
+
+//get_user_informationの引数がある時の処理
+if (isset($_POST['get_user_information']) == true) {
+    $class = new Todo();
+    $data = $class->get_user_information($_POST['user_id']);
+}
+
+//rank_countの引数がある時の処理
+if (isset($_POST['rank_count']) == true) {
+    $class = new Todo();
+    $data = $class->rank_count($_POST['user_id']);
+}
+
+//get_titleの引数がある時の処理
+if (isset($_POST['get_title']) == true) {
+    $class = new Todo();
+    $data = $class->get_title($_POST['user_id']);
+}
+
+//get_user_todolistの引数がある時の処理
+if (isset($_POST['get_user_todolist']) == true) {
+    $class = new Todo();
+    $data = $class->get_user_todolist($_POST['user_id']);
 }
 
 //arrayの中身をJSON形式に変換している
