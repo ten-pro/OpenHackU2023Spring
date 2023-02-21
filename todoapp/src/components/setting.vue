@@ -28,12 +28,29 @@
                 </div>
             </div>
             <button class="create">グループ脱退</button>
-            <button class="create">メンバー追加</button>
+            <button class="create" @click="addMember">メンバー追加</button>
         </div>
     </div>
 </template>
   <script setup lang="ts">
   // import HelloWorld from './components/HelloWorld.vue'
+  import axios from 'axios'
+  import { reactive } from 'vue'
+let addMember = () => {
+    location.href
+}
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    user_id:1,
+                    get_user_information: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function(res) {
+                    console.log(res)
+                })
   </script>
   <style scoped>
   .main {
