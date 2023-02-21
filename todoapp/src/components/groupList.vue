@@ -4,29 +4,73 @@
             <div class="topLeft">グループ一覧</div>
             <div class="underLine"></div>
             <div class="list">
-                <div class="con">
-                    <div class="title">転プロ</div>
-                </div>
-                <div class="con">
-                    <div class="title">転プロ</div>
-                </div>
-                <div class="con">
-                    <div class="title">転プロ</div>
-                </div>
-                <div class="con">
-                    <div class="title">転プロ</div>
+                <div v-for="(item, groupIndex) in groupData.groupName" :key="groupIndex" class="con">
+                    <div class="title">{{ item }}</div>
+                    <div class="over">
+                    <div class="members">
+                    <div v-for="(member, memberIndex) in groupData.groupMember[groupIndex]" :key="memberIndex"
+                        class="members">
+                        {{ member }} &nbsp;&nbsp;
+                    </div>
                 </div>
             </div>
-            <div class="around">
-            <button class="create">グループを作成</button>
+            </div>
         </div>
+            <div class="around">
+                <button class="create">グループを作成</button>
+            </div>
         </div>
     </div>
-  </template>
+</template>
   <script setup lang="ts">
-  // import HelloWorld from './components/HelloWorld.vue'
+import axios from 'axios'
+import { reactive } from "vue"
+let groupData = reactive({
+    groupLength: '',
+    memberLength: '',
+    groupName: new Array(length),
+    groupMember: [[new Array(length)],[]],
+})
+
+
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    user_id: 2,
+                    get_user_information: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function(res){
+                    groupData.groupLength = res.data.length;
+                    for(let i = 0;i < res.data.length; i ++) {
+                        groupData.groupName[i] = res.data[i].group_name;
+                        groupData.memberLength = res.data[i].group_user_list.length
+                        for(let j = 0; j < res.data[i].group_user_list.length; j ++){
+                            groupData.groupMember[i][j] = res.data[i].group_user_list[j].name
+                        }
+                    }
+                    console.log(res.data[1].group_user_list.length)
+                })
   </script>
   <style scoped>
+  .over {
+    overflow-x: scroll;
+    padding: 0 5%;
+    margin: 0 auto 3% auto;
+    width: 80% !important;
+  }
+  .over::-webkit-scrollbar {
+    display: none;
+  }
+  .members {
+    display: flex;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 5vw;
+    white-space: nowrap;
+  }
   .main {
     padding: 0 5%;
     margin: 10% 0 0 0;
@@ -72,7 +116,7 @@ background-color: #5AB4BD;
     text-align: center;
 }
 .title {
-margin: 10% 0 10% 0;
+margin: 10% 0 5% 0;
 font-size: 7vw;
 font-family: sans-serif;
 font-weight: bold;
