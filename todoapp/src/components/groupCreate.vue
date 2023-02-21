@@ -29,7 +29,7 @@
   // import HelloWorld from './components/HelloWorld.vue'
   import axios from 'axios'
   import { reactive } from "vue"
-  import swal from 'sweetAlert'
+  import swal from 'sweetalert'
   let group = reactive({
     groupName: "",
     userID: ""
@@ -38,7 +38,7 @@
     location.href
   }
   let add = () => {
-    
+
   }
   let groupInfo = () => {
             axios

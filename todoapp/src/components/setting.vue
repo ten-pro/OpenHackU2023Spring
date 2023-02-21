@@ -14,20 +14,22 @@
                     <input type="text" class="gName">
                 </div>
                 <div class="memberAll">メンバー一覧</div>
-                <div class="memberList">
-                    <div class="memName">メンバー１</div>
-                    <button class="delete">削除</button>
+                <div class="over">
+                <div class="memberList" v-for="(item, index) in userData.membarArray" :key="index">
+                    <div class="memName">{{ item }}</div>
+                    <button class="delete" @click="deleteMember(index)">削除</button>
                 </div>
-                <div class="memberList">
+            </div>
+                <!-- <div class="memberList">
                     <div class="memName">メンバー２</div>
                     <button class="delete">削除</button>
                 </div>
                 <div class="memberList">
                     <div class="memName">メンバー３</div>
                     <button class="delete">削除</button>
-                </div>
+                </div> -->
             </div>
-            <button class="create">グループ脱退</button>
+            <button class="create" @click="deleteMember">グループ脱退</button>
             <button class="create" @click="addMember">メンバー追加</button>
         </div>
     </div>
@@ -36,12 +38,19 @@
   // import HelloWorld from './components/HelloWorld.vue'
   import axios from 'axios'
   import { reactive } from 'vue'
+  import swal from 'sweetalert'
+  let userData = reactive({
+    membarLength: '',
+    membarArray:[new Array(length)],
+    session_group_id: 13,
+    usr_id: '',
+  })
 let addMember = () => {
     location.href
 }
-            axios
+                axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id:1,
+                    user_id: 2,
                     get_user_information: ''
                 }, {
                     headers: {
@@ -49,12 +58,48 @@ let addMember = () => {
                     }
                 })
                 .then(function(res) {
-                    console.log(res)
+                    let p = 0
+                    if(res.data[p].group_id == userData.session_group_id){
+                    userData.membarLength = res.data[0].group_user_list.length
+                    for(let i = 0; i < res.data[0].group_user_list.length; i ++) {
+                        userData.membarArray[i] = res.data[p].group_user_list[i].name
+                    }
+                }
+                    console.log(res.data)
                 })
+
+            let deleteMember = () => {
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    user_id: userData.usr_id,
+                    group_id: 13,
+                    delete_affiliation: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function(res){
+                    if(res.data[0] == true){
+                        swal('脱退しました。','遷移します。','success')
+                        .then(function(){
+                            location.href
+                        })
+                    }
+                }
+                )}
   </script>
   <style scoped>
   .main {
     margin: 15% 5%;
+  }
+  .over {
+    overflow: scroll;
+    width: 100%;
+    height: 50%;
+  }
+  .over::-webkit-scrollbar {
+    display: none;
   }
   .arrow {
     border: 1px solid #5AB4BD;
@@ -107,7 +152,7 @@ let addMember = () => {
     cursor: pointer;
 }
 .memberAll {
-    margin: 5%;
+    margin: 5% 5% 2% 5%;
     font-weight: bold;
     font-family: sans-serif;
     font-size: 6vw;
@@ -115,15 +160,16 @@ let addMember = () => {
 }
 .memberList {
     display: flex;
-    margin: 6% 0 0 0;
+    margin: 4% 0 0 0;
     align-items: center;
     width:100%;
+    justify-content: space-around;
 }
 .memName {
     font-size: 5vw;
     font-weight: bold;
     font-family: sans-serif;
-    margin: 0 20%;
+    margin: 0 ;
 }
 .delete {
     background-color: #5AB4BD;

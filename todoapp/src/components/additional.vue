@@ -25,7 +25,7 @@
   // import HelloWorld from './components/HelloWorld.vue'
   import axios from 'axios'
   import { reactive } from 'vue'
-  import swal from 'sweetAlert'
+  import swal from 'sweetalert'
   let userData = reactive({
     id: '',
 userName: '',
@@ -38,7 +38,7 @@ show2: false})
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
                     user_id: userData.id,
-                    group_id: 12,
+                    group_id: 13,
                     add_affiliation: ''
                 }, {
                     headers: {
