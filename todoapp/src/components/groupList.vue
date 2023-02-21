@@ -17,7 +17,7 @@
             </div>
         </div>
             <div class="around">
-                <button class="create">グループを作成</button>
+                <button class="create" @click="create">グループを作成</button>
             </div>
         </div>
     </div>
@@ -31,6 +31,9 @@ let groupData = reactive({
     groupName: new Array(length),
     groupMember: [[new Array(length)],[]],
 })
+let create = () => {
+    location.href
+}
 
 
             axios
