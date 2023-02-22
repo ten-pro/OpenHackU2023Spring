@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="main">
-            <div class="arrow">
+            <div class="arrow" @click="back">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48px" height="48px" fill="#5AB4BD"
                     class="bi bi-arrow-left" viewBox="0 0 16 16">
                     <path
@@ -11,17 +11,70 @@
             <div class="con">
                 <div class="groupName">
                     <div class="name">ユーザーID</div>
-                    <input type="text" class="gName">
+                    <input type="text" class="gName" v-model="userData.id">
                 </div>
-                <button class="display">ユーザー名表示</button>
-                <div class="underLine"></div>
+                <button class="display" @click="getUserName">ユーザー名表示</button>
+                <div class="textarea" v-show="userData.show1">{{ userData.userName }}</div>
+                <div class="underLine" v-show="userData.show2"></div>
             </div>
-            <button class="create">メンバー追加</button>
+            <button class="create" @click="addMember">メンバー追加</button>
         </div>
     </div>
 </template>
   <script setup lang="ts">
   // import HelloWorld from './components/HelloWorld.vue'
+  import axios from 'axios'
+  import { reactive } from 'vue'
+  import swal from 'sweetalert'
+  let userData = reactive({
+    id: '',
+userName: '',
+show1: false,
+show2: false})
+  let back = () => {
+    location.href
+  }
+  let addMember = () => {
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    user_id: userData.id,
+                    group_id: 13,
+                    add_affiliation: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function(res) {
+                    if(res.data == false) {
+                        swal("失敗","すでに所属しているか、存在しないユーザーです。","error");
+                    }else{
+                        swal("追加成功","グループ一覧画面に遷移します。","success",)
+                        .then(function() {
+                            location.href = ""
+                        })
+                    }
+                    console.log(res)
+                })
+            }
+            let getUserName = () => {
+                axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    user_id: userData.id,
+                    get_username: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function(res){
+                    userData.userName = res.data
+                    userData.show1 = true
+                    userData.show2 = true
+                    console.log(res)
+                })
+            }
+           
   </script>
   <style scoped>
   .main {
@@ -92,8 +145,14 @@
 }
 .underLine {
     width: 70%;
-    margin: 15% auto;
+    margin: 0% auto;
     height: 2px;
     background-color: #5AB4BD;
+}
+.textarea {
+    text-align: center;
+    margin: 10% auto 0 auto;
+    font-size: 7vw;
+    font-family: sans-serif;
 }
   </style>

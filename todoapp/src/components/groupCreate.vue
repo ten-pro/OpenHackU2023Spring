@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="main">
-            <div class="arrow">
+            <div class="arrow" @click="back">
                 <svg xmlns="http://www.w3.org/2000/svg" width="48px" height="48px" fill="#5AB4BD"
                     class="bi bi-arrow-left" viewBox="0 0 16 16">
                     <path
@@ -11,22 +11,59 @@
             <div class="con">
                 <div class="groupName">
                     <div class="name">グループ名</div>
-                    <input type="text" class="gName">
+                    <input type="text" class="gName" v-model="group.groupName">
                 </div>
                 <div class="userId">
                     <div class="id">ユーザーID</div>
-                    <input type="text" class="uName">
+                    <input type="text" class="uName" v-model="group.userID">
                 </div>
                 <div class="plusCircle">
-                    <div class="plus">+</div>
+                    <div class="plus" @click="add">+</div>
                 </div>
             </div>
-            <button class="create">グループ作成</button>
+            <button class="create" @click="groupInfo">グループ作成</button>
         </div>
     </div>
 </template>
   <script setup lang="ts">
   // import HelloWorld from './components/HelloWorld.vue'
+  import axios from 'axios'
+  import { reactive } from "vue"
+  import swal from 'sweetalert'
+  let group = reactive({
+    groupName: "",
+    userID: ""
+  })
+  let back = () => {
+    location.href
+  }
+  let add = () => {
+
+  }
+  let groupInfo = () => {
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    name: group.groupName,
+                    user_id: group.userID,
+                    create_group: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function(res){
+                    if(res.data == false) {
+                        swal("作成失敗","入力を再度確認してください。","error");
+                    }else{
+                        swal("作成成功","グループ一覧画面に遷移します。","success",)
+                        .then(function() {
+                            location.href = ""
+                        })
+                    }
+                    console.log(res.data)
+                })
+  }
+
   </script>
   <style scoped>
   .main {
