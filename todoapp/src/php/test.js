@@ -22,7 +22,14 @@ const app = new Vue({
             user_ids: [],
 
             todo_id:0,
-            image_id:1
+            image_id:1,
+
+            approval:false,
+
+            title_id:0,
+
+            title_name:'',
+            title_conditions:'',
         }
     },
     //ページが読み込まれた時に動く処理
@@ -38,6 +45,22 @@ const app = new Vue({
                     pass: this.user_pass,
                     mail: this.user_mail,
                     create_user: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(
+                    (response) => (console.log(response.data)),
+
+                )
+        },
+        create_title() {
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    title_name: this.title_name,
+                    title_conditions: this.title_conditions,
+                    create_title: ''
                 }, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -93,6 +116,24 @@ const app = new Vue({
                     todo_id: this.todo_id,
                     user_id: this.user_id,
                     request_todo: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(
+                    (response) => (console.log(response.data))
+                )
+        },
+        approval_todo() {
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    approval: this.approval,
+                    comment:this.comment,
+                    todo_id: this.todo_id,
+                    user_id: this.user_id,
+                    group_id: this.group_id,
+                    approval_todo: ''
                 }, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -257,6 +298,48 @@ const app = new Vue({
                 .post('http://mp-class.chips.jp/group_task/main.php', {
                     user_id:this.user_id,
                     get_user_todolist: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(
+                    (response) => (console.log(response.data))
+                )
+        },
+        update_usertitle() {
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    user_id:this.user_id,
+                    title_id:this.title_id,
+                    update_usertitle: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(
+                    (response) => (console.log(response.data))
+                )
+        },
+        get_header() {
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    user_id:this.user_id,
+                    get_header: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(
+                    (response) => (console.log(response.data))
+                )
+        },
+        get_bulletinboard() {
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    get_bulletinboard: ''
                 }, {
                     headers: {
                         'Content-Type': 'multipart/form-data'

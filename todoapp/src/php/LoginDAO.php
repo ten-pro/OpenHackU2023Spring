@@ -1,4 +1,5 @@
 <?php
+require_once './AchievementDAO.php';
 class Login
 {
     function get_pdo()
@@ -27,6 +28,7 @@ class Login
                 $ps->bindValue(3, $mail, PDO::PARAM_STR);
                 $ps->execute();
                 $id = $pdo->lastInsertId();
+                $this->login_update($id);
                 if ($id == null) {
                     $data = false;
                 } else {
@@ -57,7 +59,40 @@ class Login
             if ($search != null) {
                 foreach ($search as $row) {
                     $this->login_update($row['user_id']);
+                    $date = date('Y-m-d');
+                    if ($date > $row['last_login'])
+                        $this->user_countup($row['user_id']);
                     $data = array('id' => $row['user_id'], 'name' => $row['user_name'], 'chk' => true);
+
+                    //称号獲得の処理
+                    $class2 = new Achievement();
+                    switch ($row['days']) {
+                        case 1:
+                            $title_id = 5;
+                            break;
+                        case 3:
+                            $title_id = 6;
+                            break;
+                        case 7:
+                            $title_id = 7;
+                            break;
+                        case 14:
+                            $title_id = 8;
+                            break;
+                        case 30:
+                            $title_id = 9;
+                            break;
+                        case 60:
+                            $title_id = 10;
+                            break;
+                        case 180:
+                            $title_id = 11;
+                            break;
+                        case 365:
+                            $title_id = 12;
+                            break;
+                    }
+                    $class2->create_achievement($row['user_id'], $title_id);
                 }
             } else {
                 $data = false;
@@ -107,6 +142,25 @@ class Login
             } else {
                 $data = false;
             }
+        } catch (Exception $e) {
+            $data = $e;
+        } catch (Error $e) {
+            $data = $e;
+        }
+
+        return $data;
+    }
+
+    function user_countup($user_id)
+    {
+        try {
+            $pdo = $this->get_pdo();
+
+            $sql = "UPDATE user_tbl SET days = days+ 1 WHERE user_id = ?;";
+            $ps = $pdo->prepare($sql);
+            $ps->bindValue(1, $user_id, PDO::PARAM_INT);
+            $ps->execute();
+            $data = true;
         } catch (Exception $e) {
             $data = $e;
         } catch (Error $e) {

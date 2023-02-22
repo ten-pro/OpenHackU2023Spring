@@ -19,10 +19,16 @@
         <input type="button" value="Create" @click="create_user"><br>
         <br>
 
+        <h2>User_title</h2>
+        user_id<input type="number" v-model="user_id"><br>
+        title_id<input type="number" v-model="title_id"><br>
+        <input type="button" value="Update" @click="update_usertitle"><br>
+
 
         <h2>UserName</h2>
         id<input type="number" v-model="user_id"><br><br>
         <input type="button" value="GetName" @click="get_username"><br>
+        <input type="button" value="GetHeader" @click="get_header"><br>
 
         <h2>Add_Group_User</h2>
         user_id<input type="number" v-model="user_id"><br>
@@ -63,6 +69,8 @@
         完了条件<input type="text" v-model="todo_condition"><br>
         
         <input type="button" value="Create" @click="create_todo"><br>
+        <input type="button" value="掲示板" @click="get_bulletinboard"><br>
+        
 
         <h2>RequestTodo</h2>
         image_id<input type="number" v-model="image_id"><br>
@@ -70,6 +78,14 @@
         user_id<input type="number" v-model="user_id"><br><br>
         <input type="button" value="Request" @click="request_todo"><br>
         <input type="button" value="user_todo" @click="get_user_todolist"><br>
+
+        <h2>ApprovalTodo</h2>
+        comment<input type="text" v-model="comment"><br>
+        todo_id<input type="number" v-model="todo_id"><br>
+        user_id<input type="number" v-model="user_id"><br>
+        group_id<input type="number" v-model="group_id"><br>
+        approval<input type="checkbox" v-model="approval"><br>
+        <input type="button" value="approval" @click="approval_todo"><br>
 
         <h2>Create_Group</h2>
         group_name<input type="text" v-model="group_name"><br>
@@ -90,6 +106,12 @@
         <input type="button" value="Get_rank_count" @click="rank_count"><br>
         <input type="button" value="Get_title" @click="get_title"><br>
 
+
+        
+        <h2>称号作成</h2>
+        称号名<input type="text" v-model="title_name"><br>
+        詳細<input type="text" v-model="title_conditions"><br>
+        <input type="button" value="Create" @click="create_title"><br>
     </div>
     <!-- vue.jsのCDN -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>

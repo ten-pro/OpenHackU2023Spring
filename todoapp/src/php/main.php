@@ -34,7 +34,13 @@ if (isset($_POST['create_todo']) == true) {
 //request_todoの引数がある時の処理
 if (isset($_POST['request_todo']) == true) {
     $class = new Todo();
-    $data = $class->request_todo($_POST['image_id'],$_POST['todo_id'],$_POST['user_id']);
+    $data = $class->request_todo($_POST['image_id'], $_POST['todo_id'], $_POST['user_id']);
+}
+
+//approval_todoの引数がある時の処理
+if (isset($_POST['approval_todo']) == true) {
+    $class = new Todo();
+    $data = $class->approval_todo($_POST['approval'], $_POST['comment'], $_POST['todo_id'], $_POST['user_id'], $_POST['group_id']);
 }
 
 //create_titleの引数がある時の処理
@@ -64,7 +70,7 @@ if (isset($_POST['create_group']) == true) {
 //rename_groupの引数がある時の処理
 if (isset($_POST['rename_group']) == true) {
     $class = new Todo();
-    $data = $class->rename_group($_POST['group_id'],$_POST['group_name'],$_POST['user_id']);
+    $data = $class->rename_group($_POST['group_id'], $_POST['group_name'], $_POST['user_id']);
 }
 
 //get_usernameの引数がある時の処理
@@ -76,13 +82,13 @@ if (isset($_POST['get_username']) == true) {
 //add_affiliationの引数がある時の処理
 if (isset($_POST['add_affiliation']) == true) {
     $class = new Todo();
-    $data = $class->add_affiliation($_POST['group_id'],$_POST['user_id']);
+    $data = $class->add_affiliation($_POST['group_id'], $_POST['user_id']);
 }
 
 //delete_affiliationの引数がある時の処理
 if (isset($_POST['delete_affiliation']) == true) {
     $class = new Todo();
-    $data = $class->delete_affiliation($_POST['group_id'],$_POST['user_id']);
+    $data = $class->delete_affiliation($_POST['group_id'], $_POST['user_id']);
 }
 
 //get_group_userlistの引数がある時の処理
@@ -119,6 +125,24 @@ if (isset($_POST['get_title']) == true) {
 if (isset($_POST['get_user_todolist']) == true) {
     $class = new Todo();
     $data = $class->get_user_todolist($_POST['user_id']);
+}
+
+//update_usertitleの引数がある時の処理
+if (isset($_POST['update_usertitle']) == true) {
+    $class = new Todo();
+    $data = $class->update_usertitle($_POST['user_id'],$_POST['title_id']);
+}
+
+//get_headerの引数がある時の処理
+if (isset($_POST['get_header']) == true) {
+    $class = new Todo();
+    $data = $class->get_header($_POST['user_id']);
+}
+
+//get_bulletinboardの引数がある時の処理
+if (isset($_POST['get_bulletinboard']) == true) {
+    $class = new Todo();
+    $data = $class->get_bulletinboard();
 }
 
 //arrayの中身をJSON形式に変換している
