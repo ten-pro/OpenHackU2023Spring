@@ -2,11 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Hello from '../components/Hello.vue';
 import Mytodo from '../components/Mytodo.vue';
 import Hakkou from '../components/Hakkou.vue';
+import Grouptodo from '../components/Grouptodo.vue';
 
 const routes = [
   {
     path: '/',
-    component: Hello,
+    component:Mytodo,
   },
   {
     path: '/Mytodo',
@@ -15,6 +16,10 @@ const routes = [
   {
     path: '/Hakkou',
     component: Hakkou,
+  },
+  {
+    path: '/Grouptodo',
+    component: Grouptodo,
   },
 ]
 

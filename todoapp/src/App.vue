@@ -2,10 +2,6 @@
   <div>
     <Header />
     <router-view>
-      <!-- <groupList /> -->
-      <!-- <groupCreate /> -->
-      <!-- <setting /> -->
-      <additional />
     </router-view>
     <Footer />
   </div>
@@ -16,7 +12,7 @@ import Footer from "./components/Footer.vue"
 // import groupList from "./components/groupList.vue"
 // import groupCreate from "./components/groupCreate.vue"
 // import setting from "./components/setting.vue"
-import additional from "./components/additional.vue"
+// import additional from "./components/additional.vue"
   // import HelloWorld from './components/HelloWorld.vue'
 </script>
 <style scoped>

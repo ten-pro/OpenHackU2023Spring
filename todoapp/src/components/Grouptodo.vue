@@ -40,7 +40,7 @@
             <p>掲示板許可：{{ karitodo.keiji }}</p>
             <p>完了条件：{{ karitodo.jouken }}</p>
             <p class="syousai" v-show="detail[i]">詳細：{{ karitodo.shousai }}</p>
-            <img :src="karitodo.gazou" class="kari_gazou" alt="" v-show="img[i]">
+            <img  alt="">
             <div class="button_area1">
               <button class="button kan">完了</button>
               <paper-ripple fit></paper-ripple>
@@ -58,8 +58,10 @@
             <p>掲示板許可：{{ kantodo.keiji }}</p>
             <p>完了条件：{{ kantodo.jouken }}</p>
             <p class="syousai" v-show="detail[i]">詳細：{{ kantodo.shousai }}</p>
-            <img :src="kantodo.gazou" class="kari_gazou" alt="" v-show="img[i]">
-            
+            <div class="button_area2">
+              <button class="button kan">完了</button>
+              <paper-ripple fit></paper-ripple>
+            </div>
             <img src="./PNG/sita.png" alt="" class="sita2" v-show="!sita[i]" @click="zen(i)">
             <img src="./PNG/ue.png" alt="" class="ue2" v-show="ue[i]" @click="kakusu(i)">
           </div>
@@ -77,80 +79,105 @@ let sita = reactive([false])
 let mihairetu = reactive([true])
 let karihairetu = reactive([true])
 let kanryouhairetu = reactive([true])
-let mitodos = reactive([])
-let karitodos = reactive([])
-let kantodos = reactive([])
-let img = reactive([false])
-let gazou = null
+
+let mitodos = ([
+  {
+    todo_id:1,
+  title:'チャーハン材料',
+  state:'未完了',
+  day:'２月２日',
+  rank:'A',
+  jouken:'ネギ、卵、ベーコンを買ってくる',
+  keiji:'ON',
+  janru:'買い物',
+  shousai:'ネギは緑色が濃ゆいものを買ってください。卵は１０個入りをお願いします。ベーコンはぷろっくのもので、２５０円くらいのものをお願いします。'
+  },
+  {
+    todo_id:2,
+  title:'日用品を買う',
+  state:'未完了',
+  day:'２月１３日',
+  rank:'B',
+  jouken:'シャンプー、コンディショナーを買ってくる',
+  keiji:'ON',
+  janru:'買い物',
+  shousai:'ひまわりのやつをお願いします。あったらモウのアイスもｗ'
+  }
+])
+
+let karitodos = ([
+  {
+    todo_id:3,
+  title:'バレンタイン材料',
+  state:'仮完了',
+  day:'２月5日',
+  rank:'A',
+  jouken:'チョコを買ってくる',
+  keiji:'OFF',
+  janru:'買い物',
+  shousai:'ガーナのチョコをお願いします'
+  },
+  {
+    todo_id:4,
+  title:'vue３の課題を進める',
+  state:'仮完了',
+  day:'２月１5日',
+  rank:'B',
+  jouken:'仮完了',
+  keiji:'ON',
+  janru:'買い物',
+  shousai:'Vue３のテキストを１０ページ進める'
+  }
+])
+
+let kantodos = ([
+  {
+    todo_id:5,
+  title:'バレンタイン材料2',
+  state:'完了',
+  day:'２月5日',
+  rank:'A',
+  jouken:'チョコを買ってくる',
+  keiji:'OFF',
+  janru:'買い物',
+  shousai:'ガーナのチョコをお願いします'
+  },
+  {
+    todo_id:6,
+  title:'vue３の課題を進める2',
+  state:'完了',
+  day:'２月１5日',
+  rank:'B',
+  jouken:'仮完了',
+  keiji:'ON',
+  janru:'買い物',
+  shousai:'Vue３のテキストを１０ページ進める'
+  }
+])
 
 window.onload = function() {
-            axios
-                .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id:2,
-                    get_user_todolist: ''
-                }, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                .then(function (res) {
-                      console.log(res.data);
-                      //未完了
-                      if(res.data.uncompletion!= null){
-                        for(let i = 0; i < res.data.uncompletion.length;i++){
-                          mitodos[mitodos.length] = {
-                              title:res.data.uncompletion[i].title,
-                              state:res.data.uncompletion[i].state,
-                              day:res.data.uncompletion[i].deadline,
-                              rank:res.data.uncompletion[i].rank,
-                              jouken:res.data.uncompletion[i].todo_condition,
-                              shousai:res.data.uncompletion[i].message
-                          }
-                              }
-                            }
-                            //仮完了
-                            if(res.data.tentative!= null){
-                        for(let i = 0; i < res.data.tentative.length;i++){
-                          karitodos[karitodos.length] = {
-                              title:res.data.tentative[i].title,
-                              state:res.data.tentative[i].state,
-                              day:res.data.tentative[i].deadline,
-                              rank:res.data.tentative[i].rank,
-                              jouken:res.data.tentative[i].todo_condition,
-                              shousai:res.data.tentative[i].message,
-                              gazou:res.data.tentative[i].img_pass
-                          }
-                              }
-                            }
-                            //完了
-                            if(res.data.completion!= null){
-                        for(let i = 0; i < res.data.completion.length;i++){
-                          kantodos[kantodos.length] = {
-                              title:res.data.completion[i].title,
-                              state:res.data.completion[i].state,
-                              day:res.data.completion[i].deadline,
-                              rank:res.data.completion[i].rank,
-                              jouken:res.data.completion[i].todo_condition,
-                              shousai:res.data.completion[i].message
-                          }
-                              }
-                            }
-                        }
-                )}
-const sakujo = ()=>{
-
-}
+            // axios
+            //     .post('http://mp-class.chips.jp/group_task/main.php', {
+            //         user_id:1,
+            //         get_user_information: ''
+            //     }, {
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data'
+            //         }
+            //     })
+            //     .then(
+            //         (response) => (console.log(response.data))
+            //     )
+        }
 const zen =(i)=>{
   detail[i] = !detail[i]
   sita[i] = !sita[i]
   ue[i] = !ue[i]
-  img[i] = !img[i]
 }
 const kakusu = (i) =>{
   ue[i] = !ue[i]
   detail[i] = !detail[i]
   sita[i] = !sita[i]
-  img[i] = !img[i]
 }
 const mihai =(v) =>{
   mihairetu[v] = true
@@ -303,13 +330,13 @@ input[name="tab_item"] {
     .sita{
       width: 5vw;
       position: absolute;
-      top:46vw;
+      top:53vw;
       left: 70vw;
     }
     .ue{
       width: 5vw;
       position: absolute;
-      bottom: 2vw;
+      bottom: 3vw;
       left: 70vw;
     }
     .sita1{
@@ -321,7 +348,7 @@ input[name="tab_item"] {
     .ue1{
       width: 5vw;
       position: absolute;
-      bottom: 2vw;
+      bottom: 3vw;
       left: 70vw;
     }
     .sita2{
@@ -333,12 +360,8 @@ input[name="tab_item"] {
     .ue2{
       width: 5vw;
       position: absolute;
-      bottom: 2vw;
+      bottom: 3vw;
       left: 70vw;
     }
-    .kari_gazou{
-      width:50vw;
-      height: 20vh;
-      padding: 4vw;
-    }
+    
 </style>
