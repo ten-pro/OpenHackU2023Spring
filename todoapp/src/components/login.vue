@@ -43,7 +43,7 @@ let loginCheck = () => {
                 })
 }
 const accountCreate = () => {
-
+  location.href="create"
 }
   </script>
   <style scoped>

@@ -57,7 +57,6 @@
     </div>
 </template>
 <script setup lang="ts">
-import OneAchievement from './achievement/OneAchievement.vue'
 import axios from 'axios';
 import { reactive } from 'vue';
 

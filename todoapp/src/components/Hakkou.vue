@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="overflow:auto;">
     <div class="hakkou_area">
       <div class="title_area">
         <h3>タイトル</h3>
