@@ -79,95 +79,65 @@ let sita = reactive([false])
 let mihairetu = reactive([true])
 let karihairetu = reactive([true])
 let kanryouhairetu = reactive([true])
+let mitodos = reactive([])
+let karitodos = reactive([])
+let kantodos = reactive([])
 
-let mitodos = ([
-  {
-    todo_id:1,
-  title:'チャーハン材料',
-  state:'未完了',
-  day:'２月２日',
-  rank:'A',
-  jouken:'ネギ、卵、ベーコンを買ってくる',
-  keiji:'ON',
-  janru:'買い物',
-  shousai:'ネギは緑色が濃ゆいものを買ってください。卵は１０個入りをお願いします。ベーコンはぷろっくのもので、２５０円くらいのものをお願いします。'
-  },
-  {
-    todo_id:2,
-  title:'日用品を買う',
-  state:'未完了',
-  day:'２月１３日',
-  rank:'B',
-  jouken:'シャンプー、コンディショナーを買ってくる',
-  keiji:'ON',
-  janru:'買い物',
-  shousai:'ひまわりのやつをお願いします。あったらモウのアイスもｗ'
-  }
-])
-
-let karitodos = ([
-  {
-    todo_id:3,
-  title:'バレンタイン材料',
-  state:'仮完了',
-  day:'２月5日',
-  rank:'A',
-  jouken:'チョコを買ってくる',
-  keiji:'OFF',
-  janru:'買い物',
-  shousai:'ガーナのチョコをお願いします'
-  },
-  {
-    todo_id:4,
-  title:'vue３の課題を進める',
-  state:'仮完了',
-  day:'２月１5日',
-  rank:'B',
-  jouken:'仮完了',
-  keiji:'ON',
-  janru:'買い物',
-  shousai:'Vue３のテキストを１０ページ進める'
-  }
-])
-
-let kantodos = ([
-  {
-    todo_id:5,
-  title:'バレンタイン材料2',
-  state:'完了',
-  day:'２月5日',
-  rank:'A',
-  jouken:'チョコを買ってくる',
-  keiji:'OFF',
-  janru:'買い物',
-  shousai:'ガーナのチョコをお願いします'
-  },
-  {
-    todo_id:6,
-  title:'vue３の課題を進める2',
-  state:'完了',
-  day:'２月１5日',
-  rank:'B',
-  jouken:'仮完了',
-  keiji:'ON',
-  janru:'買い物',
-  shousai:'Vue３のテキストを１０ページ進める'
-  }
-])
 
 window.onload = function() {
-            // axios
-            //     .post('http://mp-class.chips.jp/group_task/main.php', {
-            //         user_id:1,
-            //         get_user_information: ''
-            //     }, {
-            //         headers: {
-            //             'Content-Type': 'multipart/form-data'
-            //         }
-            //     })
-            //     .then(
-            //         (response) => (console.log(response.data))
-            //     )
+           axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    user_id:2,
+                    get_user_information: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function(res){
+                  console.log(res.data)
+                    //未完了
+                    if(res.data.uncompletion!= null){
+                        for(let i = 0; i < res.data.group_information.uncompletion.length;i++){
+                          mitodos[mitodos.length] = {
+                              title:res.data.group_information.uncompletion[i].title,
+                              state:res.data.group_information.uncompletion[i].state,
+                              day:res.data.group_information.uncompletion[i].deadline,
+                              rank:res.data.group_information.uncompletion[i].rank,
+                              jouken:res.data.group_information.uncompletion[i].todo_condition,
+                              shousai:res.data.group_information.uncompletion[i].message
+                          }
+                              }
+                            }
+                            //仮完了
+                            if(res.data.group_information.tentative!= null){
+                        for(let i = 0; i < res.data.group_information.tentative.length;i++){
+                          karitodos[karitodos.length] = {
+                              title:res.data.group_information.tentative[i].title,
+                              state:res.data.group_information.tentative[i].state,
+                              day:res.data.group_information.tentative[i].deadline,
+                              rank:res.data.group_information.tentative[i].rank,
+                              jouken:res.data.group_information.tentative[i].todo_condition,
+                              shousai:res.data.group_information.tentative[i].message,
+                              gazou:res.data.group_information.tentative[i].img_pass
+                          }
+                              }
+                            }
+                            //完了
+                            if(res.data.group_information.completion!= null){
+                        for(let i = 0; i < res.data.group_information.completion.length;i++){
+                          kantodos[kantodos.length] = {
+                              title:res.data.group_information.completion[i].title,
+                              state:res.data.completion[i].state,
+                              day:res.data.completion[i].deadline,
+                              rank:res.data.completion[i].rank,
+                              jouken:res.data.completion[i].todo_condition,
+                              shousai:res.data.completion[i].message
+                          }
+                        }
+                      }
+                    }
+                )
         }
 const zen =(i)=>{
   detail[i] = !detail[i]
