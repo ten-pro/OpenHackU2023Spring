@@ -57,11 +57,11 @@ let date = reactive({
     youbi:"Fri"
 })
 let todo = reactive({
-    sum:56,
-    s:2,
-    a:2,
-    b:2,
-    c:2,
+    sum:0,
+    s:0,
+    a:0,
+    b:0,
+    c:0,
     title:"",
     message:"",
     todo_condition:"",

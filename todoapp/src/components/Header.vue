@@ -1,23 +1,31 @@
 <template>
     <div class="header">
-        <div class="username">上田匡成</div>
-        <div class="title">１日目</div>
+        <div class="username">{{ userdata.name }}</div>
+        <div class="title">{{ userdata.title }}</div>
     </div>
 </template>
 <script setup lang="ts">
 import axios from 'axios';
+import { reactive } from 'vue';
+
+let userdata=reactive({
+    name:"",
+    title:"",
+})
+
 axios
     .post('http://mp-class.chips.jp/group_task/main.php', {
-        user_id:1,
-        rank_count: ''
+        user_id:2,
+        get_header: ''
     }, {
         headers: {
             'Content-Type': 'multipart/form-data'
         }
     })
-    .then(
-        (response) => (console.log(response.data))
-    )
+    .then(function(res){
+        userdata.name=res.data.name;
+        userdata.title=res.data.title.name;
+    })
 </script>
 <style scoped>
 .header{
