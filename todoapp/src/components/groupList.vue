@@ -38,7 +38,7 @@ let create = () => {
 
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id: 2,
+                    user_id: 1,
                     get_user_information: ''
                 }, {
                     headers: {

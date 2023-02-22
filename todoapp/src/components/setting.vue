@@ -11,25 +11,21 @@
             <div class="con">
                 <div class="groupName">
                     <div class="name">グループ名変更</div>
-                    <input type="text" class="gName">
+                    <input type="text" class="gName" v-model="userData.groupName">
                 </div>
                 <div class="memberAll">メンバー一覧</div>
                 <div class="over">
                 <div class="memberList" v-for="(item, index) in userData.membarArray" :key="index">
                     <div class="memName">{{ item }}</div>
-                    <button class="delete" @click="deleteMember(index)">削除</button>
+                    <button class="delete" @click="dattai()">削除</button>
                 </div>
             </div>
                 <!-- <div class="memberList">
                     <div class="memName">メンバー２</div>
                     <button class="delete">削除</button>
-                </div>
-                <div class="memberList">
-                    <div class="memName">メンバー３</div>
-                    <button class="delete">削除</button>
-                </div> -->
+                </div>-->
             </div>
-            <button class="create" @click="deleteMember">グループ脱退</button>
+            <button class="create" @click="dattai">グループ脱退</button>
             <button class="create" @click="addMember">メンバー追加</button>
         </div>
     </div>
@@ -43,14 +39,16 @@
     membarLength: '',
     membarArray:[new Array(length)],
     session_group_id: 13,
-    usr_id: '',
+    session_user_id: 3,
+    groupName: '',
   })
 let addMember = () => {
     location.href
 }
+                // グループ情報を取得
                 axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id: 2,
+                    user_id: userData.session_user_id,
                     get_user_information: ''
                 }, {
                     headers: {
@@ -58,21 +56,21 @@ let addMember = () => {
                     }
                 })
                 .then(function(res) {
+                    userData.groupName = res.data[0].group_name
                     let p = 0
                     if(res.data[p].group_id == userData.session_group_id){
                     userData.membarLength = res.data[0].group_user_list.length
                     for(let i = 0; i < res.data[0].group_user_list.length; i ++) {
                         userData.membarArray[i] = res.data[p].group_user_list[i].name
-                    }
-                }
-                    console.log(res.data)
+                    }}
                 })
 
-            let deleteMember = () => {
+
+            let dattai = () => {
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id: userData.usr_id,
-                    group_id: 13,
+                    user_id: userData.session_user_id,
+                    group_id: userData.session_group_id,
                     delete_affiliation: ''
                 }, {
                     headers: {
@@ -80,14 +78,14 @@ let addMember = () => {
                     }
                 })
                 .then(function(res){
-                    if(res.data[0] == true){
                         swal('脱退しました。','遷移します。','success')
                         .then(function(){
                             location.href
                         })
-                    }
+                    
                 }
                 )}
+                // console.log(userData.)
   </script>
   <style scoped>
   .main {
