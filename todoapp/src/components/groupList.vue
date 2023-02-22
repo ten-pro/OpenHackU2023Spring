@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="main">
+            <!-- <span class="topLeft">グループ一覧</span> -->
             <div class="topLeft">グループ一覧</div>
             <div class="underLine"></div>
             <div class="list">
@@ -20,6 +21,7 @@
                 <button class="create" @click="create">グループを作成</button>
             </div>
         </div>
+
     </div>
 </template>
   <script setup lang="ts">

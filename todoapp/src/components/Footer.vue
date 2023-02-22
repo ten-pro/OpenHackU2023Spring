@@ -15,7 +15,8 @@
     justify-content: center;
     align-items: center;
     gap:3vw;
-    position:absolute;
+    position:fixed;
+    /* position: absolute;を変更 */
     width:90vw;
     height:8vh;
     bottom:2vh;
