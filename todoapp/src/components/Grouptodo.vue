@@ -1,10 +1,16 @@
 <template>
   <div>
+    <a href="/group">
+      <div class="return">
+          <img class="left" src="./PNG/left.png" />
+      </div>
+   </a>
     <select>
       <option value="">並び替え</option>
       <option value="">昇順</option>
       <option value="">降順</option>
     </select>
+    <a href="/setting"><div class="setting">設定</div></a>
     <div class="tabs">
       <input id="all" type="radio" name="tab_item" checked @click="mihai(v)">
       <label class="tab_item" for="all">未完了</label>
@@ -166,6 +172,22 @@ const kanhai =(v) =>{
 }
 </script>
 <style scoped>
+.return{
+    margin-top:3vh;
+    margin-left:5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:30vw;
+    height:6vh;
+    background-color: white;
+    border: solid 2px #5AB4BD;
+    border-radius: 20px;
+  }
+ .left{
+    width:15vw;
+    height:4.5vh;
+ }
 select {
   appearance: none;
   width: 20%;
@@ -174,6 +196,22 @@ select {
   background: #eee;
   text-align: center;
   margin-left: 75%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  border-radius: 10px;
+  position: fixed;
+  top:20vw;
+}
+.setting{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:20vw;
+  height:4.5vh;
+  border-radius: 10px;
+  color:white;
+  background-color: #33CFC6;
+  margin-left: 53%;
   margin-top: 2%;
   margin-bottom: 2%;
   border-radius: 10px;

@@ -1,48 +1,50 @@
 <template>
-    <div class="yyyymmdd">
-        {{ date.year }}/{{ date.month }}/{{ date.day }}({{ date.youbi }})
-    </div>
-    <div class="sum">
-        <div class="suminner">
-            {{ todo.sum }}
+    <div style="overflow:auto;height:80vh">
+        <div class="yyyymmdd">
+            {{ date.year }}/{{ date.month }}/{{ date.day }}({{ date.youbi }})
         </div>
-    </div>
-    <div class="rank">
-        <div class="flex">
-            <div class="imgposi Simg">
-                <div class="text Sposi">
-                    {{ todo.s }}
-                </div>
-            </div>
-            <div class="imgposi Aimg">
-                <div class="text Aposi">
-                    {{ todo.a }}
-                </div>
+        <div class="sum">
+            <div class="suminner">
+                {{ todo.sum }}
             </div>
         </div>
-        <div class="flex">
-            <div class="imgposi Bimg">
-                <div class="text Bposi">
-                    {{ todo.b }}
+        <div class="rank">
+            <div class="flex">
+                <div class="imgposi Simg">
+                    <div class="text Sposi">
+                        {{ todo.s }}
+                    </div>
+                </div>
+                <div class="imgposi Aimg">
+                    <div class="text Aposi">
+                        {{ todo.a }}
+                    </div>
                 </div>
             </div>
-            <div class="imgposi Cimg">
-                <div class="text Cposi">
-                    {{ todo.c }}
+            <div class="flex">
+                <div class="imgposi Bimg">
+                    <div class="text Bposi">
+                        {{ todo.b }}
+                    </div>
+                </div>
+                <div class="imgposi Cimg">
+                    <div class="text Cposi">
+                        {{ todo.c }}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="today">
-        <div class="title">
-            <div class="title_message">{{ todo.title }}</div>
-                <div class="task">
-                    <div class="ran">ランク</div><div class="rank_text">{{ todo.rank }}</div>
-                    <div class="kan">完了条件</div><div class="condition_text">{{ todo.todo_condition }}</div>
-                    <div class="syou">詳細</div>
-                    <div class="message_text">{{ todo.message }}</div>
-                </div>
+        <div class="today">
+            <div class="title">
+                <div class="title_message">{{ todo.title }}</div>
+                    <div class="task">
+                        <div class="ran">ランク</div><div class="rank_text">{{ todo.rank }}</div>
+                        <div class="kan">完了条件</div><div class="condition_text">{{ todo.todo_condition }}</div>
+                        <div class="syou">詳細</div>
+                        <div class="message_text">{{ todo.message }}</div>
+                    </div>
+            </div>
         </div>
     </div>
 </template>
@@ -206,7 +208,7 @@ axios
     position: relative;
     display:grid;
     grid-template-rows: 2vh 5vh 5vh 17vh;
-    grid-template-columns: 3vw 17vw 3vw 54vw 3vw;
+    grid-template-columns: 3vw 20vw 3vw 51vw 3vw;
     width:80vw;
     height:25vh;
     margin-top:5vh;
@@ -217,7 +219,7 @@ axios
 }
 .ran{
     position: absolute;
-    width:17vw;
+    width:20vw;
     grid-row: 2/3;
     grid-column: 2/3;
     text-align: center;
@@ -235,9 +237,10 @@ axios
 }
 .kan{
     position: absolute;
-    width:17vw;
+    width:20vw;
     grid-row: 3/4;
     grid-column: 2/3;
+    text-align: center;
     border-bottom: solid 3px grey;
     bottom:0px;
 }
@@ -252,18 +255,18 @@ axios
 }
 .syou{
     position: absolute;
-    width:17vw;
+    width:20vw;
     text-align: center;
     grid-row: 4/5;
     grid-column: 2/3;
-    top:2vh;
+    top:1vh;
 }
 .message_text{
     position: absolute;
     font-size: 2vh;
     grid-row: 4/5;
     grid-column: 4/5;
-    top:2vh;
+    top:1vh;
 }
 </style>
   

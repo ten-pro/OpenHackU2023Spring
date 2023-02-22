@@ -44,7 +44,7 @@
                 })
   }
   let touroku = () => {
-    location.href
+    location.href="/"
   }
   </script>
   <style scoped>
