@@ -1,13 +1,11 @@
-<template>
++<template>
     <div>
         <div class="main">
-            <div class="arrow">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48px" height="48px" fill="#5AB4BD"
-                    class="bi bi-arrow-left" viewBox="0 0 16 16">
-                    <path
-                        d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
-                </svg>
-            </div>
+            <a href="/grouptodo">
+                <div class="return">
+                    <img class="left" src="./PNG/left.png" />
+                </div>
+            </a>
             <div class="con">
                 <div class="groupName">
                     <div class="name">グループ名変更</div>
@@ -38,12 +36,12 @@
   let userData = reactive({
     membarLength: '',
     membarArray:[new Array(length)],
-    session_group_id: 13,
     session_user_id: 3,
     groupName: '',
+    session_group_id: sessionStorage.getItem("group_id"),
   })
 let addMember = () => {
-    location.href
+    location.href="/add"
 }
                 // グループ情報を取得
                 axios
@@ -88,8 +86,23 @@ let addMember = () => {
                 // console.log(userData.)
   </script>
   <style scoped>
+  .return{
+    margin-left:5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:30vw;
+    height:6vh;
+    background-color: white;
+    border: solid 2px #5AB4BD;
+    border-radius: 20px;
+  }
+ .left{
+    width:15vw;
+    height:4.5vh;
+ }
   .main {
-    margin: 15% 5%;
+    margin: 10% 5%;
   }
   .over {
     overflow: scroll;
