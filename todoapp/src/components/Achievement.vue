@@ -147,9 +147,11 @@ axios
 }
 .title{
     text-align: center;
-    font-size: 7vw;
+    font-size: 5vw;
+    font-weight: bold;
 }
 .text{
+    margin-top:1vh;
     text-align: center;
 }
 
