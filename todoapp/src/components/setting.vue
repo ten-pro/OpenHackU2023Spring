@@ -2,7 +2,7 @@
     <div>
         <div class="main">
             <a href="/grouptodo">
-                <div class="return">
+                <div class="return" @click="rename">
                     <img class="left" src="./PNG/left.png" />
                 </div>
             </a>
@@ -32,7 +32,7 @@
   let userData = reactive({
     membarLength: '',
     membarArray:[new Array(length)],
-    session_user_id: 7,
+    session_user_id: 2,
     groupName: '',
     deleteName: [''],
     deleteID: '',
@@ -41,6 +41,22 @@
   })
 let addMember = () => {
     location.href="/add"
+}
+let rename = () => {
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    user_id: userData.session_user_id,
+                    group_id: userData.session_group_id,
+                    group_name: userData.groupName,
+                    rename_group: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(
+                    (response) => (console.log(response.data))
+                )
 }
 function deleteID(index: number) {
     // console.log(userData.membarArray[index])
