@@ -1,8 +1,8 @@
-+<template>
+<template>
     <div>
         <div class="main">
             <a href="/grouptodo">
-                <div class="return">
+                <div class="return" @click="rename">
                     <img class="left" src="./PNG/left.png" />
                 </div>
             </a>
@@ -15,13 +15,9 @@
                 <div class="over">
                 <div class="memberList" v-for="(item, index) in userData.membarArray" :key="index">
                     <div class="memName">{{ item }}</div>
-                    <button class="delete" @click="dattai()">削除</button>
+                    <button class="delete" @click="deleteID(index)">削除</button>
                 </div>
             </div>
-                <!-- <div class="memberList">
-                    <div class="memName">メンバー２</div>
-                    <button class="delete">削除</button>
-                </div>-->
             </div>
             <button class="create" @click="dattai">グループ脱退</button>
             <button class="create" @click="addMember">メンバー追加</button>
@@ -36,13 +32,76 @@
   let userData = reactive({
     membarLength: '',
     membarArray:[new Array(length)],
-    session_user_id: 3,
+    session_user_id: 2,
     groupName: '',
-    session_group_id: sessionStorage.getItem("group_id"),
+    deleteName: [''],
+    deleteID: '',
+    // session_group_id: sessionStorage.getItem("group_id"),
+    session_group_id: 12,
   })
 let addMember = () => {
     location.href="/add"
 }
+let rename = () => {
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    user_id: userData.session_user_id,
+                    group_id: userData.session_group_id,
+                    group_name: userData.groupName,
+                    rename_group: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(
+                    // (response) => (console.log(response.data))
+                )
+}
+function deleteID(index: number) {
+    // console.log(userData.membarArray[index])
+    userData.deleteName = userData.membarArray[index]
+    // console.groupCollapsed(userData.deleteName)
+    axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    user_id:userData.session_user_id,
+                    get_user_information: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function(res) {
+                    for(let i = 0; i < res.data[0].group_user_list.length; i ++) {
+                        if(userData.deleteName == res.data[0].group_user_list[i].name) {
+                            userData.deleteID = res.data[0].group_user_list[i].id
+                            // console.log(userData.deleteID)
+                        }
+                    }
+                    console.log(res)
+                    deleteUser()
+                }
+                
+                )
+}
+
+let deleteUser = () => {
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    user_id: userData.deleteID,
+                    group_id: userData.session_group_id,
+                    delete_affiliation: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function(res){
+                    location.href = ''
+                    // 再読み込みして欲しい
+                }
+                )
+            }
                 // グループ情報を取得
                 axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
@@ -83,7 +142,6 @@ let addMember = () => {
                     
                 }
                 )}
-                // console.log(userData.)
   </script>
   <style scoped>
   .return{

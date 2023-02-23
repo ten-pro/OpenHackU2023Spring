@@ -9,7 +9,7 @@
     <div class="subtitle select">画像選択</div>
     <div class="text">
       <label>
-        <input type="file" accept='image/*' @change="previewImage($event.target)">ファイルを選択
+        <input ref="fileInput" type="file" accept='image/*' @change="previewImage($event.target)">ファイルを選択
       </label>
     </div>
     <div class="title"><img id="preview" :src="previewSrc" style="max-width:50vw;max-height:50vh;"></div>

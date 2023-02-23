@@ -12,66 +12,79 @@
     </select>
     <a href="/setting"><div class="setting">設定</div></a>
     <div class="tabs">
-      <input id="all" type="radio" name="tab_item" checked @click="mihai(v)">
+      <input id="all" type="radio" name="tab_item" checked @click="mihai()">
       <label class="tab_item" for="all">未完了</label>
-      <input id="programming" type="radio" name="tab_item" @click="karihai(v)">
+      <input id="programming" type="radio" name="tab_item" @click="karihai()">
       <label class="tab_item" for="programming">仮完了</label>
-      <input id="design" type="radio" name="tab_item" @click="kanhai(v)">
+      <input id="design" type="radio" name="tab_item" @click="kanhai()">
       <label class="tab_item" for="design">完了</label>
       <div class="todos">
-        <div class="tab_content" id="mi_content" v-for="mitodo in mitodos" :key="mitodo" v-show="mihairetu[v]">
+        <div class="tab_content" id="mi_content" v-for="(mitodo,index) in mitodos" :key="index" v-show="swith.mi">
           <div class="mikanryou">
             <h3>{{ mitodo.title }}</h3>
             <p>期限日：{{ mitodo.day }}</p>
             <p>ランク：{{ mitodo.rank }}</p>
-            <p>ジャンル：{{ mitodo.janru }}</p>
+            <p>ジャンル：{{ mitodo.genre }}</p>
             <p>掲示板許可：{{ mitodo.keiji }}</p>
             <p>完了条件：{{ mitodo.jouken }}</p>
-            <p class="syousai" v-show="detail[i]">詳細：{{ mitodo.shousai }}</p>
-            <div class="button_area">
-              <button class="button kan">完了</button>
-              <paper-ripple fit></paper-ripple>
-              <button class="button saku">削除</button>
-            </div>
-            <img src="./PNG/sita.png" alt="" class="sita" v-show="!sita[i]" @click="zen(i)">
-            <img src="./PNG/ue.png" alt="" class="ue" v-show="ue[i]" @click="kakusu(i)">
+            <p class="syousai" v-show="detail[index]">詳細：{{ mitodo.shousai }}</p>
+            <img src="./PNG/sita.png" alt="" class="sita" v-show="!sita[index]" @click="zen(index)">
+            <img src="./PNG/ue.png" alt="" class="ue" v-show="ue[index]" @click="kakusu(index)">
           </div>
         </div>
-        <div class="tab_content" id="kari_content" v-for="karitodo in karitodos" :key="karitodo" v-show="karihairetu[v]">
+        <div class="tab_content" id="kari_content" v-for="(karitodo,index) in karitodos" :key="index" v-show="swith.kari">
           <div class="karikanryou">
             <h3>{{ karitodo.title }}</h3>
             <p>期限日：{{ karitodo.day }}</p>
             <p>ランク：{{ karitodo.rank }}</p>
-            <p>ジャンル：{{ karitodo.janru }}</p>
+            <p>ジャンル：{{ karitodo.genre }}</p>
             <p>掲示板許可：{{ karitodo.keiji }}</p>
             <p>完了条件：{{ karitodo.jouken }}</p>
-            <p class="syousai" v-show="detail[i]">詳細：{{ karitodo.shousai }}</p>
+            <p class="syousai" v-show="detail[index]">詳細：{{ karitodo.shousai }}</p>
             <img  alt="">
-            <div class="button_area1">
-              <button class="button kan">完了</button>
-              <paper-ripple fit></paper-ripple>
+            <div class="button_area">
+              <button class="button kan" @click="okfunk(index)">承認</button>
+              <!-- <paper-ripple fit></paper-ripple> -->
+              <button class="button saku" @click="nofunk(index)">拒否</button>
             </div>
-            <img src="./PNG/sita.png" alt="" class="sita1" v-show="!sita[i]" @click="zen(i)">
-            <img src="./PNG/ue.png" alt="" class="ue1" v-show="ue[i]" @click="kakusu(i)">
+            <img v-show="detail[index]" :src="karitodo.gazou" style="max-width:50vw;max-height:30vh;"/>
+            <img src="./PNG/sita.png" alt="" class="sita1" v-show="!sita[index]" @click="zen(index)">
+            <img src="./PNG/ue.png" alt="" class="ue1" v-show="ue[index]" @click="kakusu(index)">
           </div>
         </div>
-        <div class="tab_content" id="kan_content" v-for="kantodo in kantodos" :key="kantodo" v-show="kanryouhairetu[v]">
+        <div class="tab_content" id="kan_content" v-for="(kantodo,index) in kantodos" :key="index" v-show="swith.kan">
           <div class="kanryou">
             <h3>{{ kantodo.title }}</h3>
             <p>期限日：{{ kantodo.day }}</p>
             <p>ランク：{{ kantodo.rank }}</p>
-            <p>ジャンル：{{ kantodo.janru }}</p>
+            <p>ジャンル：{{ kantodo.genre }}</p>
             <p>掲示板許可：{{ kantodo.keiji }}</p>
             <p>完了条件：{{ kantodo.jouken }}</p>
-            <p class="syousai" v-show="detail[i]">詳細：{{ kantodo.shousai }}</p>
-            <div class="button_area2">
-              <button class="button kan">完了</button>
-              <paper-ripple fit></paper-ripple>
-            </div>
-            <img src="./PNG/sita.png" alt="" class="sita2" v-show="!sita[i]" @click="zen(i)">
-            <img src="./PNG/ue.png" alt="" class="ue2" v-show="ue[i]" @click="kakusu(i)">
+            <p class="syousai" v-show="detail[index]">詳細：{{ kantodo.shousai }}</p>
+            <img v-show="detail[index]" :src="kantodo.gazou" style="max-width:50vw;max-height:30vh;"/>
+            <img src="./PNG/sita.png" alt="" class="sita2" v-show="!sita[index]" @click="zen(index)">
+            <img src="./PNG/ue.png" alt="" class="ue2" v-show="ue[index]" @click="kakusu(index)">
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal" v-show="modalstate.show" >
+    <div class="modal-content">
+      <img class="batu" src="./PNG/batu.png" @click="modalstate.show=false">
+      <div class="top">
+        理由を書いてください
+      </div>
+      <div class="modal_title">
+        {{modalstate.state}}
+      </div>
+      <div class="textareawrap">
+      <textarea class="textarea" v-model="modalstate.text"></textarea>
+      </div>
+      <div style="text-align:center;">
+        <button class="submit" @click="submit">
+          送信
+        </button>
       </div>
     </div>
   </div>
@@ -79,72 +92,108 @@
 <script setup>
 import axios from 'axios'
 import {reactive} from 'vue'
+import '@polymer/paper-ripple/paper-ripple.js';
 let detail = reactive([false])
 let ue = reactive([false])
 let sita = reactive([false])
-let mihairetu = reactive([true])
-let karihairetu = reactive([true])
-let kanryouhairetu = reactive([true])
+let swith = reactive({
+  mi:true,
+  kari:false,
+  kan:false
+})
 let mitodos = reactive([])
 let karitodos = reactive([])
 let kantodos = reactive([])
+let modalstate = reactive({
+  state:"",
+  text:"",
+  show:false,
+  post:true,
+  todo_id:0,
+})
 
 
-window.onload = function() {
-           axios
-                .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id:2,
-                    get_user_information: ''
-                }, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                .then(function(res){
-                  console.log(res.data)
-                    //未完了
-                    if(res.data.uncompletion!= null){
-                        for(let i = 0; i < res.data.group_information.uncompletion.length;i++){
-                          mitodos[mitodos.length] = {
-                              title:res.data.group_information.uncompletion[i].title,
-                              state:res.data.group_information.uncompletion[i].state,
-                              day:res.data.group_information.uncompletion[i].deadline,
-                              rank:res.data.group_information.uncompletion[i].rank,
-                              jouken:res.data.group_information.uncompletion[i].todo_condition,
-                              shousai:res.data.group_information.uncompletion[i].message
-                          }
-                              }
-                            }
-                            //仮完了
-                            if(res.data.group_information.tentative!= null){
-                        for(let i = 0; i < res.data.group_information.tentative.length;i++){
-                          karitodos[karitodos.length] = {
-                              title:res.data.group_information.tentative[i].title,
-                              state:res.data.group_information.tentative[i].state,
-                              day:res.data.group_information.tentative[i].deadline,
-                              rank:res.data.group_information.tentative[i].rank,
-                              jouken:res.data.group_information.tentative[i].todo_condition,
-                              shousai:res.data.group_information.tentative[i].message,
-                              gazou:res.data.group_information.tentative[i].img_pass
-                          }
-                              }
-                            }
-                            //完了
-                            if(res.data.group_information.completion!= null){
-                        for(let i = 0; i < res.data.group_information.completion.length;i++){
-                          kantodos[kantodos.length] = {
-                              title:res.data.group_information.completion[i].title,
-                              state:res.data.completion[i].state,
-                              day:res.data.completion[i].deadline,
-                              rank:res.data.completion[i].rank,
-                              jouken:res.data.completion[i].todo_condition,
-                              shousai:res.data.completion[i].message
-                          }
-                        }
-                      }
-                    }
-                )
+window.onload = function () {
+  axios
+    .post('http://mp-class.chips.jp/group_task/main.php', {
+      group_id: 12,
+      get_todolist: ''
+    }, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(function (res) {
+      console.log(res.data)
+      //未完了
+      try{
+        if (res.data[0].group_information.uncompletion != null) {
+          for (let i = 0; i < res.data[0].group_information.uncompletion.length; i++) {
+            let kari ={
+              id: res.data[0].group_information.uncompletion[i].todo_id,
+              title: res.data[0].group_information.uncompletion[i].title,
+              state: res.data[0].group_information.uncompletion[i].state,
+              day: res.data[0].group_information.uncompletion[i].deadline,
+              rank: res.data[0].group_information.uncompletion[i].rank,
+              jouken: res.data[0].group_information.uncompletion[i].todo_condition,
+              shousai: res.data[0].group_information.uncompletion[i].messsage,
+              genre: res.data[0].group_information.uncompletion[i].genre.genre_name,
+              genre_color: res.data[0].group_information.uncompletion[i].genre.genre_color,
+              keiji: res.data[0].group_information.uncompletion[i].permission==0?"許可":"拒否",
+            }
+            mitodos[i] = kari;
+          }
         }
+      }catch(error){
+
+      }
+      //仮完了
+      try {
+        if (res.data[0].group_information.tentative != null) {
+          for (let i = 0; i < res.data[0].group_information.tentative.length; i++) {
+            console.log(res.data[0].group_information.tentative[i].image_pass.slice(1))
+            karitodos[karitodos.length] = {
+              id: res.data[0].group_information.tentative[i].todo_id,
+              title: res.data[0].group_information.tentative[i].title,
+              state: res.data[0].group_information.tentative[i].state,
+              day: res.data[0].group_information.tentative[i].deadline,
+              rank: res.data[0].group_information.tentative[i].rank,
+              jouken: res.data[0].group_information.tentative[i].todo_condition,
+              shousai: res.data[0].group_information.tentative[i].messsage,
+              genre: res.data[0].group_information.tentative[i].genre.genre_name,
+              genre_color: res.data[0].group_information.tentative[i].genre.genre_color,
+              keiji: res.data[0].group_information.tentative[i].permission==0?"許可":"拒否",
+              gazou: "https://mp-class.chips.jp/group_task" + res.data[0].group_information.tentative[i].image_pass.slice(1)
+            }
+          }
+        }
+      } catch (error) {
+
+      }
+      //完了
+      try {
+        if (res.data[0].group_information.completion != null) {
+          for (let i = 0; i < res.data[0].group_information.completion.length; i++) {
+            kantodos[kantodos.length] = {
+              id: res.data[0].group_information.completion[i].todo_id,
+              title: res.data[0].group_information.completion[i].title,
+              state: res.data[0].group_information.completion[i].state,
+              day: res.data[0].group_information.completion[i].deadline,
+              rank: res.data[0].group_information.completion[i].rank,
+              jouken: res.data[0].group_information.completion[i].todo_condition,
+              shousai: res.data[0].group_information.completion[i].messsage,
+              genre: res.data[0].group_information.completion[i].genre.genre_name,
+              genre_color: res.data[0].group_information.completion[i].genre.genre_color,
+              keiji: res.data[0].group_information.completion[i].permission==0?"許可":"拒否",
+              gazou: "https://mp-class.chips.jp/group_task" + res.data[0].group_information.completion[i].image_pass.slice(1)
+            }
+          }
+        }
+      } catch (error) {
+
+      }
+    })
+}
 const zen =(i)=>{
   detail[i] = !detail[i]
   sita[i] = !sita[i]
@@ -155,23 +204,128 @@ const kakusu = (i) =>{
   detail[i] = !detail[i]
   sita[i] = !sita[i]
 }
-const mihai =(v) =>{
-  mihairetu[v] = true
-  karihairetu[v] = false
-  kanryouhairetu[v] = false
+const mihai =() =>{
+  swith.mi=true;
+  swith.kari=false;
+  swith.kan=false;
 }
-const karihai =(v) =>{
-  mihairetu[v] = false
-  karihairetu[v] = true
-  kanryouhairetu[v] = false
+const karihai =() =>{
+  swith.mi=false;
+  swith.kari=true;
+  swith.kan=false;
 }
-const kanhai =(v) =>{
-  karihairetu[v] = false
-  mihairetu[v] = false
-  kanryouhairetu[v] = true
+const kanhai =() =>{
+  swith.mi=false;
+  swith.kari=false;
+  swith.kan=true;
+}
+
+const okfunk=(i)=>{
+  modalstate.state="承認";
+  modalstate.show=true;
+  modalstate.post=true;
+  modalstate.todo_id=karitodos[i].id
+}
+const nofunk=(i)=>{
+  modalstate.state="拒否";
+  modalstate.show=true;
+  modalstate.post=false;
+  modalstate.todo_id=karitodos[i].id
+}
+const submit=()=>{
+  axios
+    .post('http://mp-class.chips.jp/group_task/main.php', {
+        approval: modalstate.post,//true or false
+        comment:modalstate.text,//承認or拒否理由
+        todo_id: modalstate.todo_id,
+        user_id: 2,
+        group_id: 13,
+        approval_todo: ''
+    }, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+    .then(
+        (response) => (console.log(response.data))
+    )
 }
 </script>
 <style scoped>
+.modal{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+.modal-content {
+  position: fixed;
+  width:70%;
+  height:60%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fefefe;
+  border: 0.3vh solid #ACD9DE;
+  border-radius: 20px;
+  z-index: 1000;
+}
+.batu{
+  position:absolute;
+  right:-2vh;
+  top:-2vh;
+  width:5vh;
+  height:5vh;
+  font-size:5vh;
+  border-radius: 50%;
+  background-color: #33CFC6;
+}
+.top{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color:white;
+  background-color: #33CFC6;
+  border-radius: 20px;
+  font-size:3vh;
+  width: 100%;
+  height:25%;
+}
+.modal_title{
+  color:#33CFC6;
+  font-size:3vh;
+  text-align: center;
+  margin-top:3vh;
+}
+.textareawrap{
+  height:20vh;
+  text-align: center;
+  margin-top:3vh;
+  margin-bottom: 5vh;
+}
+.textarea{
+  width:80%;
+  height:20vh;
+  border: solid 0.3vh #33CFC6;
+  border-radius: 10px;
+}
+.submit{
+  width:40%;
+  height:5vh;
+  background-color: #33CFC6;
+  border-radius: 10px;
+  color:white;
+  font-size: 2.5vh;
+  margin:auto;
+}
+
+
+
+
+
 .return{
     margin-top:3vh;
     margin-left:5vw;
@@ -338,13 +492,13 @@ input[name="tab_item"] {
     .sita{
       width: 5vw;
       position: absolute;
-      top:53vw;
+      top:46vw;
       left: 70vw;
     }
     .ue{
       width: 5vw;
       position: absolute;
-      bottom: 3vw;
+      bottom: 2vw;
       left: 70vw;
     }
     .sita1{
@@ -356,7 +510,7 @@ input[name="tab_item"] {
     .ue1{
       width: 5vw;
       position: absolute;
-      bottom: 3vw;
+      bottom: 2vw;
       left: 70vw;
     }
     .sita2{
@@ -368,7 +522,7 @@ input[name="tab_item"] {
     .ue2{
       width: 5vw;
       position: absolute;
-      bottom: 3vw;
+      bottom: 2vw;
       left: 70vw;
     }
     
