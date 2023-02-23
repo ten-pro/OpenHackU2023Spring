@@ -43,9 +43,9 @@
             <p class="syousai" v-show="detail[index]">詳細：{{ karitodo.shousai }}</p>
             <img  alt="">
             <div class="button_area">
-              <button class="button kan">承認</button>
+              <button class="button kan" @click="okfunk(index)">承認</button>
               <!-- <paper-ripple fit></paper-ripple> -->
-              <button class="button saku">拒否</button>
+              <button class="button saku" @click="nofunk(index)">拒否</button>
             </div>
             <img v-show="detail[index]" :src="karitodo.gazou" style="max-width:50vw;max-height:30vh;"/>
             <img src="./PNG/sita.png" alt="" class="sita1" v-show="!sita[index]" @click="zen(index)">
@@ -69,6 +69,25 @@
       </div>
     </div>
   </div>
+  <div class="modal" v-show="modalstate.show" >
+    <div class="modal-content">
+      <img class="batu" src="./PNG/batu.png" @click="modalstate.show=false">
+      <div class="top">
+        理由を書いてください
+      </div>
+      <div class="modal_title">
+        {{modalstate.state}}
+      </div>
+      <div class="textareawrap">
+      <textarea class="textarea" v-model="modalstate.text"></textarea>
+      </div>
+      <div style="text-align:center;">
+        <button class="submit" @click="submit">
+          送信
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 <script setup>
 import axios from 'axios'
@@ -85,6 +104,13 @@ let swith = reactive({
 let mitodos = reactive([])
 let karitodos = reactive([])
 let kantodos = reactive([])
+let modalstate = reactive({
+  state:"",
+  text:"",
+  show:false,
+  post:true,
+  todo_id:0,
+})
 
 
 window.onload = function () {
@@ -98,6 +124,7 @@ window.onload = function () {
       }
     })
     .then(function (res) {
+      console.log(res.data)
       //未完了
       try{
         if (res.data[0].group_information.uncompletion != null) {
@@ -132,10 +159,10 @@ window.onload = function () {
               day: res.data[0].group_information.tentative[i].deadline,
               rank: res.data[0].group_information.tentative[i].rank,
               jouken: res.data[0].group_information.tentative[i].todo_condition,
-              shousai: res.data[0].group_information.uncompletion[i].messsage,
-              genre: res.data[0].group_information.uncompletion[i].genre.genre_name,
-              genre_color: res.data[0].group_information.uncompletion[i].genre.genre_color,
-              keiji: res.data[0].group_information.uncompletion[i].permission==0?"許可":"拒否",
+              shousai: res.data[0].group_information.tentative[i].messsage,
+              genre: res.data[0].group_information.tentative[i].genre.genre_name,
+              genre_color: res.data[0].group_information.tentative[i].genre.genre_color,
+              keiji: res.data[0].group_information.tentative[i].permission==0?"許可":"拒否",
               gazou: "https://mp-class.chips.jp/group_task" + res.data[0].group_information.tentative[i].image_pass.slice(1)
             }
           }
@@ -192,8 +219,113 @@ const kanhai =() =>{
   swith.kari=false;
   swith.kan=true;
 }
+
+const okfunk=(i)=>{
+  modalstate.state="承認";
+  modalstate.show=true;
+  modalstate.post=true;
+  modalstate.todo_id=karitodos[i].id
+}
+const nofunk=(i)=>{
+  modalstate.state="拒否";
+  modalstate.show=true;
+  modalstate.post=false;
+  modalstate.todo_id=karitodos[i].id
+}
+const submit=()=>{
+  axios
+    .post('http://mp-class.chips.jp/group_task/main.php', {
+        approval: modalstate.post,//true or false
+        comment:modalstate.text,//承認or拒否理由
+        todo_id: modalstate.todo_id,
+        user_id: 2,
+        group_id: 13,
+        approval_todo: ''
+    }, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+    .then(
+        (response) => (console.log(response.data))
+    )
+}
 </script>
 <style scoped>
+.modal{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+.modal-content {
+  position: fixed;
+  width:70%;
+  height:60%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fefefe;
+  border: 0.3vh solid #ACD9DE;
+  border-radius: 20px;
+  z-index: 1000;
+}
+.batu{
+  position:absolute;
+  right:-2vh;
+  top:-2vh;
+  width:5vh;
+  height:5vh;
+  font-size:5vh;
+  border-radius: 50%;
+  background-color: #33CFC6;
+}
+.top{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color:white;
+  background-color: #33CFC6;
+  border-radius: 20px;
+  font-size:3vh;
+  width: 100%;
+  height:25%;
+}
+.modal_title{
+  color:#33CFC6;
+  font-size:3vh;
+  text-align: center;
+  margin-top:3vh;
+}
+.textareawrap{
+  height:20vh;
+  text-align: center;
+  margin-top:3vh;
+  margin-bottom: 5vh;
+}
+.textarea{
+  width:80%;
+  height:20vh;
+  border: solid 0.3vh #33CFC6;
+  border-radius: 10px;
+}
+.submit{
+  width:40%;
+  height:5vh;
+  background-color: #33CFC6;
+  border-radius: 10px;
+  color:white;
+  font-size: 2.5vh;
+  margin:auto;
+}
+
+
+
+
+
 .return{
     margin-top:3vh;
     margin-left:5vw;

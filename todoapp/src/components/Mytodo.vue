@@ -41,7 +41,7 @@
             <h3>{{ karitodo.title }}</h3>
             <p>期限日：{{ karitodo.day }}</p>
             <p>ランク：{{ karitodo.rank }}</p>
-            <p>ジャンル：{{ karitodo.janru }}</p>
+            <p>ジャンル：{{ karitodo.genre }}</p>
             <p>掲示板許可：{{ karitodo.keiji }}</p>
             <p>完了条件：{{ karitodo.jouken }}</p>
             <p class="syousai" v-show="detail[index]">詳細：{{ karitodo.shousai }}</p>
@@ -55,7 +55,7 @@
             <h3>{{ kantodo.title }}</h3>
             <p>期限日：{{ kantodo.day }}</p>
             <p>ランク：{{ kantodo.rank }}</p>
-            <p>ジャンル：{{ kantodo.janru }}</p>
+            <p>ジャンル：{{ kantodo.genre }}</p>
             <p>掲示板許可：{{ kantodo.keiji }}</p>
             <p>完了条件：{{ kantodo.jouken }}</p>
             <p class="syousai" v-show="detail[index]">詳細：{{ kantodo.shousai }}</p>
@@ -76,13 +76,13 @@
       <img class="left" src="./PNG/left.png" @click="swith.complete_page=false"/>
     </div>
     <div class="image_area">
-      <div class="title">チャーハン材料</div>
+      <div class="title">{{con_data.con_title}}</div>
       <div class="subtitle">完了条件</div>
-      <div class="text">ネギ、卵、ベーコンを買ってくる</div>
+      <div class="text">{{con_data.con_jouken}}</div>
       <div class="subtitle select">画像選択</div>
       <div class="text">
         <label class="postlabel">
-          <input type="file" accept='image/*' @change="previewImage($event.target)" class="postinput">ファイルを選択
+          <input ref="fileInput" type="file" accept='image/*' @change="previewImage($event.target)" class="postinput">ファイルを選択
         </label>
       </div>
       <div class="title"><img id="preview" :src="previewSrc" style="max-width:50vw;max-height:50vh;"></div>
@@ -106,6 +106,10 @@ let swith = reactive({
 let mitodos = reactive([])
 let karitodos = reactive([])
 let kantodos = reactive([])
+let con_data = reactive({
+  con_title:"",
+  con_data:"",
+})
 
 
 
@@ -114,40 +118,8 @@ const previewSrc = ref("")
 const fileInput = ref(null);
 
 // create uploadFile method and expose it to template
-const uploadFile = () => {
-  const file = fileInput.value.files[0];
-  if (!file) return;
 
-  // create FormData object and append file object
-  const formData = new FormData();
-  formData.append('image', file);
-  formData.append('user_id', 2);
-    formData.append('todo_id', mitodos.id);
 
-  // send FormData object to php using axios post method
-  axios.post('http://mp-class.chips.jp/group_task/upload.php',formData)
-    .then(response => {
-      // handle success response
-      console.log(response.data);
-    })
-    .catch(error => {
-      // handle error response
-      console.error(error);
-    });
-}
-defineExpose({
-  uploadFile,
-});
-
-const previewImage = (obj) => {
-  const fileReader = new FileReader()
-  fileReader.onload = () => {
-    previewSrc.value = fileReader.result
-  }
-  fileReader.readAsDataURL(obj.files[0])
-}
-
-window.onload = function () {
   axios
     .post('http://mp-class.chips.jp/group_task/main.php', {
         user_id:2,
@@ -185,20 +157,21 @@ window.onload = function () {
       try {
         if (res.data.tentative != null) {
           for (let i = 0; i < res.data.tentative.length; i++) {
-            karitodos[karitodos.length] = {
+            karitodos[i] = {
               id: res.data.tentative[i].todo_id,
               title: res.data.tentative[i].title,
               state: res.data.tentative[i].state,
               day: res.data.tentative[i].deadline,
               rank: res.data.tentative[i].rank,
               jouken: res.data.tentative[i].todo_condition,
-              shousai: res.data.uncompletion[i].messsage,
-              genre: res.data.uncompletion[i].genre.genre_name,
-              genre_color: res.data.uncompletion[i].genre.genre_color,
-              keiji: res.data.uncompletion[i].permission==0?"許可":"拒否",
+              shousai: res.data.tentative[i].messsage,
+              genre: res.data.tentative[i].genre.genre_name,
+              genre_color: res.data.tentative[i].genre.genre_color,
+              keiji: res.data.tentative[i].permission==0?"許可":"拒否",
               gazou: "https://mp-class.chips.jp/group_task" + res.data.tentative[i].image_pass.slice(1)
             }
           }
+          console.log(karitodos)
         }
       } catch (error) {
 
@@ -207,17 +180,17 @@ window.onload = function () {
       try {
         if (res.data.completion != null) {
           for (let i = 0; i < res.data.completion.length; i++) {
-            kantodos[kantodos.length] = {
+            kantodos[i] = {
               id: res.data.completion[i].todo_id,
               title: res.data.completion[i].title,
               state: res.data.completion[i].state,
               day: res.data.completion[i].deadline,
               rank: res.data.completion[i].rank,
               jouken: res.data.completion[i].todo_condition,
-              shousai: res.data.uncompletion[i].messsage,
-              genre: res.data.uncompletion[i].genre.genre_name,
-              genre_color: res.data.uncompletion[i].genre.genre_color,
-              keiji: res.data.uncompletion[i].permission==0?"許可":"拒否",
+              shousai: res.data.completion[i].messsage,
+              genre: res.data.completion[i].genre.genre_name,
+              genre_color: res.data.completion[i].genre.genre_color,
+              keiji: res.data.completion[i].permission==0?"許可":"拒否",
               gazou: "https://mp-class.chips.jp/group_task" + res.data.completion[i].image_pass.slice(1)
             }
           }
@@ -226,7 +199,6 @@ window.onload = function () {
 
       }
     })
-}
 const zen =(i)=>{
   detail[i] = !detail[i]
   sita[i] = !sita[i]
@@ -255,9 +227,45 @@ const kanhai =() =>{
 
 const todocomplete=(i)=>{
   swith.complete_page=true;
+  con_data.con_title=mitodos[i].title;
+  con_data.con_jouken=mitodos[i].jouken;
 }
 const tododelete=(i)=>{
 
+}
+
+
+const uploadFile = () => {
+  const file = fileInput.value.files[0];
+  if (!file) return;
+
+  // create FormData object and append file object
+  const formData = new FormData();
+  formData.append('image', file);
+  formData.append('user_id', 2);
+    formData.append('todo_id', mitodos.id);
+
+  // send FormData object to php using axios post method
+  axios.post('http://mp-class.chips.jp/group_task/upload.php',formData)
+    .then(response => {
+      // handle success response
+      console.log(response.data);
+    })
+    .catch(error => {
+      // handle error response
+      console.error(error);
+    });
+}
+defineExpose({
+  uploadFile,
+});
+
+const previewImage = (obj) => {
+  const fileReader = new FileReader()
+  fileReader.onload = () => {
+    previewSrc.value = fileReader.result
+  }
+  fileReader.readAsDataURL(obj.files[0])
 }
 </script>
 <style scoped>
