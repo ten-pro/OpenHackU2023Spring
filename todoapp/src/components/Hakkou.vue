@@ -49,25 +49,29 @@
           <div class="saki_area">
             <h4>発行先</h4>
             <div class="button2 r2" id="button-12">
-                <input type="checkbox" class="checkbox2"  @click="atesaki(i)"/>
+                <input type="checkbox" class="checkbox2"  @click="atesaki()"/>
                 <div class="knobs2"></div>
                 <div class="layer2"></div>
             </div>
           </div>
         </div>
         <div>
-          <select class="select1">
+          <select class="select1" @change="group_click">
           <option value="">グループ名</option>
-          <option value="1">A</option>
-          <option value="2">B</option>
+          <option :value="item.id" v-for="(item,index) in group_data" :key="index">
+            {{item.groupname}}
+          </option>
           </select>
         </div>
         <div>
-          <select class="select2" v-show="sele[i]">
-          <option value="">ユーザー名</option>
-          <option value="">A</option>
-          <option value="">B</option>
-          </select>
+          <div v-for="(item,i) in group_data" :key="i">
+            <div v-show="nowgroup.number==i">
+              <select class="select2" v-show="sele[0]">
+              <option value="">ユーザー名</option>
+              <option value="" v-for="(item,index) in group_data[nowgroup.number].groupusers" :key="index">{{ item.name }}</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
       <button class="hakkou_btn" @click="create_todo()">発行</button>
@@ -86,61 +90,69 @@ let syousai = reactive([])
 const keizi = reactive([true])
 let keizi_sum =1
 let sele = reactive([false])
-const atesaki = (i) =>{
-  sele[i] = !sele[i]
+let nowgroup = reactive({
+  number:0,
+})
+const atesaki = () =>{
+  sele[0] = !sele[0]
 }
 let group_data = reactive([])
-window.onload = function(){
+axios
+  .post('http://mp-class.chips.jp/group_task/main.php', {
+    user_id: 2,
+    get_user_information: ''
+  }, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  .then(function (res) {
+    console.log(res)
+    for (let i = 0; i < res.data.length; i++) {
+      group_data[group_data.length] = {
+        id: res.data[i].group_id,
+        groupname: res.data[i].group_name,
+        groupusers: res.data[i].group_user_list
+      }
+      console.log(res.data[i].group_id)
+    }
+    console.log(group_data)
+  })
+//後ここだけ
+const create_todo = () => {
+  if (keizi == true) {
+    keizi_sum = 1
+  } else {
+    keizi_sum = 0
+  }
   axios
-                .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id:2,
-                    get_user_information: ''
-                }, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                .then(function(res){
-                  console.log(res)
-                  for(let i = 0; i < res.data.lenght;i++){
-                    group_data[group_data.length]={
-                      id:res.data[0].group_id[i],
-                      groupname:res.data[0].group_name[i]
-                    }
-                  }
-                }  
-                )
+    .post('http://mp-class.chips.jp/group_task/main.php', {
+      create_todo: '',
+      title: title,
+      message: syousai, //詳細
+      user_id: 2,
+      group_id: 1,
+      genre_id: 1, //ジャンルID
+      deadline: kigen, //期限
+      rank: rank,
+      permission: keizi_sum,
+      todo_condition: jouken //条件
+    }, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(function (res) {
+      console.log("発行完了")
+      console.log(res.data)
+
+    })
 }
 
-const create_todo=() =>{
-    if(keizi == true){
-      keizi_sum = 1
-    }else{
-      keizi_sum = 0
-    }
-            axios
-                .post('http://mp-class.chips.jp/group_task/main.php', {
-                    create_todo: '',
-                    title: title,
-                    message:syousai,//詳細
-                    user_id: 2,
-                    group_id: 1,
-                    genre_id: 1,//ジャンルID
-                    deadline: kigen,//期限
-                    rank: rank,
-                    permission: keizi_sum,
-                    todo_condition: jouken//条件
-                }, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                .then(function (res) {
-                  console.log("発行完了")
-                    console.log(res.data)
-
-                })
-        }
+const group_click=(event)=>{
+  console.log(event.target.selectedIndex - 1)
+  nowgroup.number=event.target.selectedIndex - 1
+}
 </script>
 <style scoped>
 .sc {

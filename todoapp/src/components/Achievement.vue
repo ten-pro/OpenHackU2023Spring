@@ -59,7 +59,6 @@
 <script setup lang="ts">
 import axios from 'axios';
 import { reactive } from 'vue';
-
 let login = reactive([{title:"",text:""}])
 let renlogin = reactive([{title:"",text:""}])
 let sum = reactive([{title:"",text:""}])
