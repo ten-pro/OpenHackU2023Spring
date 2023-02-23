@@ -2,13 +2,6 @@
   <div>
     <Header />
     <router-view>
-      <!-- <login /> -->
-      <!-- <accountCreate /> -->
-      <!-- <additional /> -->
-      <!-- <groupList /> -->
-      
-      <!-- <groupCreate /> -->
-      <setting />
     </router-view>
     <Footer />
   </div>
