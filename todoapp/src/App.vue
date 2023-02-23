@@ -1,21 +1,24 @@
 <template>
   <div>
-    <Header />
+    <div v-show="state.login && state.create">
+      <Header />
+    </div>
     <router-view>
     </router-view>
-    <Footer />
+    <div v-show="state.login && state.create">
+      <Footer />
+    </div>
   </div>
   </template>
 <script setup lang="ts">
+import { reactive } from "vue";
 import Header from "./components/Header.vue"
 import Footer from "./components/Footer.vue"
-// import groupList from "./components/groupList.vue"
-// import groupCreate from "./components/groupCreate.vue"
-import setting from "./components/setting.vue"
-// import additional from "./components/additional.vue"
-//   import HelloWorld from './components/HelloWorld.vue'
-//   import login from "./components/login.vue"
-// import accountCreate from "./components/accountCreate.vue";
+//今いるリンクと比較
+let state = reactive({
+  login:location.href!='http://localhost:5173/',
+  create:location.href!='http://localhost:5173/create'
+})
 </script>
 <style scoped>
 </style>

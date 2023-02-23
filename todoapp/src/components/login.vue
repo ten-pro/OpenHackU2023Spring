@@ -1,5 +1,7 @@
 <template>
     <div>
+      <icon />
+      <div class="appName">To Do コネクト</div>
         <div class="main">
         <input type="text" placeholder="@mail" class="mail" v-model="userData.mailaddress">
         <input type="password" placeholder="password" class="pass" v-model="userData.password">
@@ -11,6 +13,7 @@
   </template>
   <script setup lang="ts">
   // import HelloWorld from './components/HelloWorld.vue'
+  import icon from './icon.vue'
   import axios from 'axios'
   import { reactive } from "vue"
   let userData = reactive({
@@ -43,24 +46,37 @@ let loginCheck = () => {
                 })
 }
 const accountCreate = () => {
-
+  location.href="create"
 }
   </script>
   <style scoped>
+  .appName {
+    display: block;
+    text-align: center;
+    font-size: 7vw;
+    font-weight: bold;
+    margin: 0 auto;
+  }
   .main {
-    margin: 50% auto;
+
+    text-align: center;
+    padding: 5% 0 5% 0;
+    margin: 10% 10% 5%  5%;
+    border-radius: 20px;
+    box-shadow: 2px 2px gray;
+    background-color: white;
     text-align: center;
   }
   .mail {
     width: 60vw;
     height: 15vw;
-    border: 5px solid #5AB4BD;
+    border: 3px solid #5AB4BD;
     border-radius: 50px;
     display: block;
     font-size: 6vw;
     text-align: center;
     color: #5AB4BD;
-    font-weight: bold;
+
     opacity: 0.9;
     margin: 0 auto 5% auto;
   }
@@ -71,19 +87,20 @@ const accountCreate = () => {
   .pass {
     width: 60vw;
     height: 15vw;
-    border: 5px solid #5AB4BD;
+    border: 3px solid #5AB4BD;
     border-radius: 50px;
     display: block;
     font-size: 6vw;
     text-align: center;
     color: #5AB4BD;
-    font-weight: bold;
+
     opacity: 0.9;
     margin: 0 auto 5% auto;
   }
   .login {
     background-color: #5AB4BD;
     width: 60vw;
+    cursor: pointer;
     height: 15vw;
     border-radius: 25px;
     color: white;
@@ -96,6 +113,7 @@ const accountCreate = () => {
     font-size: 7vw;
     margin: 5% auto 0 auto;
     font-weight: bold;
+    cursor: pointer;
   }
   .error {
     color: red;

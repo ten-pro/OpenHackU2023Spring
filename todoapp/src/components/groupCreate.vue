@@ -1,50 +1,61 @@
 <template>
     <div>
         <div class="main">
-            <div class="arrow" @click="back">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48px" height="48px" fill="#5AB4BD"
-                    class="bi bi-arrow-left" viewBox="0 0 16 16">
-                    <path
-                        d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
-                </svg>
-            </div>
+            <a href="/group">
+                <div class="return">
+                    <img class="left" src="./PNG/left.png" />
+                </div>
+            </a>
             <div class="con">
                 <div class="groupName">
                     <div class="name">グループ名</div>
-                    <input type="text" class="gName" v-model="group.groupName">
+                    <input type="text" class="gName" v-model="group_name">
                 </div>
                 <div class="userId">
                     <div class="id">ユーザーID</div>
-                    <input type="text" class="uName" v-model="group.userID">
+                    <input type="text" class="uName" v-model="userid">
                 </div>
                 <div class="plusCircle">
                     <div class="plus" @click="add">+</div>
+                </div>
+                <div v-for="(user,index) in users" :key="index" class="tuika">
+                   <p class="userhai">{{ user }}</p> 
                 </div>
             </div>
             <button class="create" @click="groupInfo">グループ作成</button>
         </div>
     </div>
 </template>
-  <script setup lang="ts">
-  // import HelloWorld from './components/HelloWorld.vue'
+  <script setup >
   import axios from 'axios'
   import { reactive } from "vue"
   import swal from 'sweetalert'
-  let group = reactive({
-    groupName: "",
-    userID: ""
-  })
+  let group_name = reactive()
+  let userid = reactive([])
+  let users= reactive([])
   let back = () => {
     location.href
   }
-  let add = () => {
-
-  }
-  let groupInfo = () => {
+  const add =()=> {
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
-                    name: group.groupName,
-                    user_id: group.userID,
+                    user_id: userid,
+                    get_username: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function(res){
+                    console.log(res.data)
+                        users[users.length]=res.data;
+                })
+  }
+  const groupInfo = () => {
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    name: group_name,
+                    user_id: users,
                     create_group: ''
                 }, {
                     headers: {
@@ -67,8 +78,26 @@
   </script>
   <style scoped>
   .main {
-    margin: 20% 5%;
+    margin: 15% 5%;
   }
+  .return{
+    position: absolute;
+    top: 20vw;
+    left: 2vw;
+    margin-left:5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:30vw;
+    height:6vh;
+    background-color: white;
+    border: solid 2px #5AB4BD;
+    border-radius: 20px;
+  }
+ .left{
+    width:15vw;
+    height:4.5vh;
+ }
   .arrow {
     border: 1px solid #5AB4BD;
     background-color: white;
@@ -78,15 +107,18 @@
     border-radius: 10px;
   }
 .con {
+    position: relative;
+    top: 3vw;
     width: 100%;
-    height: 40vh;
+    height: 50vh;
     background-color: white;
     border-radius: 10px;
+    overflow: auto;
 }
 .groupName {
-    margin: 5% 0 0 0;
+    /* margin: 5% 0 0 0; */
     display: flex;
-    padding: 10% 5% 0 5%;  
+    padding: 4vw;
     align-items: center;  
 }
 .name {
@@ -106,7 +138,7 @@
     padding: 0 3%;
 }
 .userId {
-    margin: 5% 0 0 0;
+    /* margin: 5% 0 0 0; */
     display: flex;
     padding: 10% 5% 0 5%;  
     align-items: center;  
@@ -133,7 +165,7 @@
     border-radius: 100px;
     border: 1px solid #5AB4BD;
     text-align: center;
-    margin: 5% auto 0 auto;
+    margin: 7% auto 0 auto;
     cursor: pointer;
 }
 .plus {
@@ -151,5 +183,14 @@
     font-weight: bold;
     margin: 10% auto ;
     display: flex;
+}
+.tuika{
+    position: relative;
+    left: 30vw;
+}
+.userhai{
+    font-size: 4vw;
+    font-weight: bold;
+    font-family: sans-serif;
 }
   </style>

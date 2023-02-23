@@ -36,6 +36,7 @@ axios
     height:6.5vh;
     margin:auto;
     margin-top:2vh;
+    left: 4.7vw;
     border-radius: 50px;
     font-size:2.5vh;
     border: solid 0.7vw #33CFC6;

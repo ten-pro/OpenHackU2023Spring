@@ -1,5 +1,7 @@
 <template>
     <div>
+      <icon />
+      <div class="appName">To Do コネクト</div>
         <div class="main">
         <input type="text" placeholder="@mail" class="mail" v-model="userData.mailaddress">
         <input type="text" placeholder="userName" class="userName" v-model="userData.userName">
@@ -12,6 +14,7 @@
   </template>
   <script setup lang="ts">
   // import HelloWorld from './components/HelloWorld.vue'
+  import icon from './icon.vue'
   import axios from 'axios'
   import { reactive } from "vue"
   let userData = reactive({
@@ -44,24 +47,35 @@
                 })
   }
   let touroku = () => {
-    location.href
+    location.href="/"
   }
   </script>
   <style scoped>
+  .appName {
+display: block;
+    text-align: center;
+    font-size: 7vw;
+    font-weight: bold;
+    margin: 0 auto;
+  }
   .main {
-    margin: 50% auto;
+    padding: 5% 0 5% 0;
+    margin: 10% 10% 5%  5%;
+    border-radius: 20px;
+    box-shadow: 2px 2px gray;
+    background-color: white;
     text-align: center;
   }
   .mail, .userName, .password {
     width: 60vw;
     height: 15vw;
-    border: 5px solid #5AB4BD;
+    border: 3px solid #5AB4BD;
     border-radius: 50px;
     display: block;
     font-size: 6vw;
     text-align: center;
     color: #5AB4BD;
-    font-weight: bold;
+
     opacity: 0.9;
     margin: 0 auto 5% auto;
   }

@@ -1,10 +1,11 @@
 <template>
     <div>
         <div class="main">
+            <!-- <span class="topLeft">グループ一覧</span> -->
             <div class="topLeft">グループ一覧</div>
             <div class="underLine"></div>
             <div class="list">
-                <div v-for="(item, groupIndex) in groupData.groupName" :key="groupIndex" class="con">
+                <div v-for="(item, groupIndex) in groupData.groupName" :key="groupIndex" class="con" @click="nextpage(groupIndex)">
                     <div class="title">{{ item }}</div>
                     <div class="over">
                     <div class="members">
@@ -20,25 +21,33 @@
                 <button class="create" @click="create">グループを作成</button>
             </div>
         </div>
+
     </div>
 </template>
   <script setup lang="ts">
 import axios from 'axios'
 import { reactive } from "vue"
+
 let groupData = reactive({
+    group_id:new Array(length),
     groupLength: '',
     memberLength: '',
     groupName: new Array(length),
     groupMember: [[new Array(length)],[]],
 })
+
+let nextpage =(a: number)=>{
+    sessionStorage.setItem("group_id",String(groupData.group_id[a]))
+    location.href="/grouptodo"
+}
 let create = () => {
-    location.href
+    location.href="/groupcreate"
 }
 
 
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id: 2,
+                    user_id: 1,
                     get_user_information: ''
                 }, {
                     headers: {
@@ -46,8 +55,10 @@ let create = () => {
                     }
                 })
                 .then(function(res){
+                    console.log(res.data)
                     groupData.groupLength = res.data.length;
                     for(let i = 0;i < res.data.length; i ++) {
+                        groupData.group_id[i] = res.data[i].group_id
                         groupData.groupName[i] = res.data[i].group_name;
                         groupData.memberLength = res.data[i].group_user_list.length
                         for(let j = 0; j < res.data[i].group_user_list.length; j ++){
