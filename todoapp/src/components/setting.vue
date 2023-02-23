@@ -55,7 +55,7 @@ let rename = () => {
                     }
                 })
                 .then(
-                    (response) => (console.log(response.data))
+                    // (response) => (console.log(response.data))
                 )
 }
 function deleteID(index: number) {
