@@ -26,6 +26,7 @@ const fileInput = ref(null);
 
 // create uploadFile method and expose it to template
 const uploadFile = () => {
+  console.log(fileInput)
   const file = fileInput.value.files[0];
   if (!file) return;
 
