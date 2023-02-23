@@ -29,8 +29,7 @@
             <p class="syousai" v-show="detail[index]">詳細：{{ mitodo.shousai }}</p>
             <div class="button_area">
               <button class="button kan" @click="todocomplete(index)">完了</button>
-              <!-- <paper-ripple fit></paper-ripple> -->
-              <button class="button saku" @click="tododelete(index)">削除</button>
+              <button class="button saku" @click="sakujo(mitodo.todo_id)">削除</button>
             </div>
             <img src="./PNG/sita.png" alt="" class="sita" v-show="!sita[index]" @click="zen(index)">
             <img src="./PNG/ue.png" alt="" class="ue" v-show="ue[index]" @click="kakusu(index)">
@@ -230,9 +229,22 @@ const todocomplete=(i)=>{
   con_data.con_title=mitodos[i].title;
   con_data.con_jouken=mitodos[i].jouken;
 }
-const tododelete=(i)=>{
-
-}
+// 削除機能です！！
+// const sakujo = (todo_id)=>{
+//   axios
+//                 .post('http://mp-class.chips.jp/group_task/main.php', {
+//                     delete_todo: '',
+//                     todo_id:todo_id
+//                 }, {
+//                     headers: {
+//                         'Content-Type': 'multipart/form-data'
+//                     }
+//                 })
+//                 .then(function (res) {
+//                   location.href = ""
+//                     console.log(res.data)
+//                 })
+// }
 
 
 const uploadFile = () => {
