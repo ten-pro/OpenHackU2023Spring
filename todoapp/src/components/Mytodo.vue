@@ -230,21 +230,21 @@ const todocomplete=(i)=>{
   con_data.con_jouken=mitodos[i].jouken;
 }
 // 削除機能です！！
-// const sakujo = (todo_id)=>{
-//   axios
-//                 .post('http://mp-class.chips.jp/group_task/main.php', {
-//                     delete_todo: '',
-//                     todo_id:todo_id
-//                 }, {
-//                     headers: {
-//                         'Content-Type': 'multipart/form-data'
-//                     }
-//                 })
-//                 .then(function (res) {
-//                   location.href = ""
-//                     console.log(res.data)
-//                 })
-// }
+const sakujo = (todo_id)=>{
+  axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    delete_todo: '',
+                    todo_id:todo_id
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function (res) {
+                  location.href = ""
+                    console.log(res.data)
+                })
+}
 
 
 const uploadFile = () => {

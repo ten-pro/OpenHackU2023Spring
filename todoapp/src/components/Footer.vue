@@ -4,7 +4,7 @@
         <a href="/mytodo"><img class="footer_icon" src="./PNG/todo.png"/></a>
         <a href="/hakkou"><img class="footer_icon" src="./PNG/post.png"/></a>
         <a href="/group"><img class="footer_icon" src="./PNG/group.png"/></a>
-        <a href="/home"><img class="footer_icon" src="./PNG/sns.png"/></a>
+        <a href="/Social"><img class="footer_icon" src="./PNG/sns.png"/></a>
     </div>
 </template>
 <script setup lang="ts">

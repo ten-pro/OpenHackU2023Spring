@@ -11,6 +11,7 @@ import Group from '../components/groupList.vue'
 import GroupCreate from '../components/groupCreate.vue'
 import Setting from '../components/setting.vue'
 import Add from '../components/additional.vue'
+import Social from '../components/Social.vue'
 
 const routes = [
   {
@@ -60,6 +61,10 @@ const routes = [
   {
     path: '/achievement',
     component: Achievement,
+  },
+  {
+    path: '/social',
+    component: Social,
   },
   
 ]
