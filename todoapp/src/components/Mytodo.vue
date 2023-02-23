@@ -14,7 +14,7 @@
       <label class="tab_item" for="design">完了</label>
       <div class="todos">
         <div class="tab_content" id="mi_content" v-for="mitodo in mitodos" :key="mitodo" v-show="mihairetu[v]">
-          <div class="mikanryou">
+          <div class="mikanryou" v-if="saku">
             <h3>{{ mitodo.title }}</h3>
             <p>期限日：{{ mitodo.day }}</p>
             <p>ランク：{{ mitodo.rank }}</p>
@@ -25,13 +25,13 @@
             <div class="button_area">
               <button class="button kan">完了</button>
               <paper-ripple fit></paper-ripple>
-              <button class="button saku">削除</button>
+              <button class="button saku" @click="sakujo(mitodo.todo_id)">削除</button>
             </div>
             <img src="./PNG/sita.png" alt="" class="sita" v-show="!sita[i]" @click="zen(i)">
             <img src="./PNG/ue.png" alt="" class="ue" v-show="ue[i]" @click="kakusu(i)">
           </div>
         </div>
-        <div class="tab_content" id="kari_content" v-for="karitodo in karitodos" :key="karitodo" v-show="karihairetu[v]">
+        <div class="tab_content" id="kari_content" v-for="karitodo in karitodos" :key="karitodo" v-show="karihairetu[v]" >
           <div class="karikanryou">
             <h3>{{ karitodo.title }}</h3>
             <p>期限日：{{ karitodo.day }}</p>
@@ -40,7 +40,7 @@
             <p>掲示板許可：{{ karitodo.keiji }}</p>
             <p>完了条件：{{ karitodo.jouken }}</p>
             <p class="syousai" v-show="detail[i]">詳細：{{ karitodo.shousai }}</p>
-            <img :src="karitodo.gazou" class="kari_gazou" alt="" v-show="img[i]">
+            <img :src="new_gazou" class="kari_gazou" alt="" v-show="img[i]">
             <div class="button_area1">
               <button class="button kan">完了</button>
               <paper-ripple fit></paper-ripple>
@@ -82,6 +82,7 @@ let karitodos = reactive([])
 let kantodos = reactive([])
 let img = reactive([false])
 let gazou = null
+let saku = reactive([true])
 
 window.onload = function() {
             axios
@@ -104,7 +105,8 @@ window.onload = function() {
                               day:res.data.uncompletion[i].deadline,
                               rank:res.data.uncompletion[i].rank,
                               jouken:res.data.uncompletion[i].todo_condition,
-                              shousai:res.data.uncompletion[i].message
+                              shousai:res.data.uncompletion[i].message,
+                              todo_id:res.data.uncompletion[i].todo_id
                           }
                               }
                             }
@@ -118,7 +120,7 @@ window.onload = function() {
                               rank:res.data.tentative[i].rank,
                               jouken:res.data.tentative[i].todo_condition,
                               shousai:res.data.tentative[i].message,
-                              gazou:res.data.tentative[i].img_pass
+                              gazou:res.data.tentative[i].img_pass,
                           }
                               }
                             }
@@ -137,9 +139,22 @@ window.onload = function() {
                             }
                         }
                 )}
-const sakujo = ()=>{
-
-}
+// 削除機能です！！
+// const sakujo = (todo_id)=>{
+//   axios
+//                 .post('http://mp-class.chips.jp/group_task/main.php', {
+//                     delete_todo: '',
+//                     todo_id:todo_id
+//                 }, {
+//                     headers: {
+//                         'Content-Type': 'multipart/form-data'
+//                     }
+//                 })
+//                 .then(function (res) {
+//                   location.href = ""
+//                     console.log(res.data)
+//                 })
+// }
 const zen =(i)=>{
   detail[i] = !detail[i]
   sita[i] = !sita[i]

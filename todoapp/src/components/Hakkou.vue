@@ -1,5 +1,5 @@
 <template>
-  <div style="overflow:auto;">
+  <div >
     <div class="hakkou_area">
       <div class="title_area">
         <h3>タイトル</h3>
@@ -15,11 +15,23 @@
       </div>
       <div class="rank_area">
         <h3>ランク</h3>
-        <input type="text" class="text_area" v-model="rank">
+        <select class="select3" v-model="rank">
+          <option value=""></option>
+          <option value="S">S</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+        </select>
       </div>
       <div class="janru_area">
         <h3>ジャンル</h3>
-        <input type="text" class="text_area" v-model="janru">
+        <select class="select4" v-model="janru">
+          <option value=""></option>
+          <option value="買い物">買い物</option>
+          <option value="勉強・仕事">勉強・仕事</option>
+          <option value="予定・締め切り">予定・締め切り</option>
+          <option value="その他">その他</option>
+        </select>
       </div>
       <div class="syousai_area">
         <h3>詳細</h3>
@@ -77,6 +89,28 @@ let sele = reactive([false])
 const atesaki = (i) =>{
   sele[i] = !sele[i]
 }
+let group_data = reactive([])
+window.onload = function(){
+  axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    user_id:2,
+                    get_user_information: ''
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function(res){
+                  console.log(res)
+                  for(let i = 0; i < res.data.lenght;i++){
+                    group_data[group_data.length]={
+                      id:res.data[0].group_id[i],
+                      groupname:res.data[0].group_name[i]
+                    }
+                  }
+                }  
+                )
+}
 
 const create_todo=() =>{
     if(keizi == true){
@@ -89,7 +123,7 @@ const create_todo=() =>{
                     create_todo: '',
                     title: title,
                     message:syousai,//詳細
-                    user_id: 1,
+                    user_id: 2,
                     group_id: 1,
                     genre_id: 1,//ジャンルID
                     deadline: kigen,//期限
@@ -114,8 +148,9 @@ const create_todo=() =>{
   height: 70vh;
   background-color: white;
   position: relative;
-  top: 21vw;
+  top: 3vw;
   left: 5vw;
+  overflow: auto;
 }
 .hakkou_btn{
   width: 40vw;
@@ -125,7 +160,7 @@ const create_todo=() =>{
   background-color: #5ab4bd;
   color: white;
   position: relative;
-  top: 22vw;
+  top: 5vw;
   left: 30vw;
 }
 .title_area{
@@ -165,6 +200,7 @@ const create_todo=() =>{
   left: 17vw;
 }
 .text_area{
+  
   width: 50vw;
   height: 4vh;
   margin: 1vw;
@@ -395,5 +431,26 @@ h4{
   color: #5AB4BD;
   padding:0
 }
-
+.select3 {
+  appearance: none;
+  width:52vw ;
+  padding: 10px;
+  border: 1px solid #5AB4BD;
+  background-color: white;
+  color: #5AB4BD;
+  border-radius: 3px;
+  position: absolute;
+  left: 20vw;
+}
+.select4 {
+  appearance: none;
+  width:52vw ;
+  padding: 10px;
+  border: 1px solid #5AB4BD;
+  background-color: white;
+  color: #5AB4BD;
+  border-radius: 3px;
+  position: absolute;
+  left: 25vw;
+}
 </style>
