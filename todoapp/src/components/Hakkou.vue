@@ -3,7 +3,7 @@
     <div class="hakkou_area">
       <div class="title_area">
         <h3>タイトル</h3>
-        <input type="text" class="text_area" v-model="title">
+        <input type="text" class="text_area title" v-model="title" placeholder="買い物（チャーハンの材料）">
       </div>
       <div class="kigen_area">
         <h3>期限日</h3>
@@ -11,7 +11,7 @@
       </div>
       <div class="jouken_area">
         <h3>完了条件</h3>
-        <input type="text" class="text_area" v-model="jouken">
+        <input type="text" class="text_area" v-model="jouken" placeholder="ネギ、卵、ベーコンを購入">
       </div>
       <div class="rank_area">
         <h3>ランク</h3>
@@ -22,8 +22,8 @@
         <input type="text" class="text_area" v-model="janru">
       </div>
       <div class="syousai_area">
-        <h3>詳細</h3>
-        <input type="text" class="text_area" v-model="syousai">
+        <h3 class="sc">詳細</h3>
+        <textarea type="text" class="text_area syousai" v-model="syousai" placeholder="ネギは緑色が濃ゆいものを、卵は10個入り、ベーコンはブロックで２５０円ぐらいの物を選択"></textarea>
       </div>
       <div class="radio_area">
         <div class="keizi_area">
@@ -109,6 +109,26 @@ const create_todo=() =>{
         }
 </script>
 <style scoped>
+.sc {
+  white-space: nowrap;
+}
+
+.syousai {
+  padding: 2% 1% 5% 1%;
+}
+textarea::-webkit-scrollbar {
+  display: none;
+}
+.syousai::placeholder {
+  text-align: left;
+}
+::placeholder {
+  color: #7c7c7c;
+  text-align: center;
+  font-size: 5vw;
+  opacity: 0.9;
+  font-weight: bold;
+}
 .hakkou_area{
   width: 90%;
   height: 70vh;
