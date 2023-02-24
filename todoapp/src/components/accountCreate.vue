@@ -6,8 +6,9 @@
         <input type="text" placeholder="@mail" class="mail" v-model="userData.mailaddress">
         <input type="text" placeholder="userName" class="userName" v-model="userData.userName">
         <input type="password" placeholder="password" class="password" v-model="userData.password">
-        <button class="login" @click="accountCreate">Sign Up</button>
-        <div class="error" v-show="userData.error">入力内容を再確認してくだい</div>
+        <button class="login" @click="createAccount">Sign Up</button>
+        <div class="error" v-show="userData.error1">入力内容を再確認してくだい</div>
+        <div class="error" v-show="userData.error2">全て必須入力です</div>
         <div class="touroku" @click="touroku">登録画面へ</div>
     </div>
     </div>
@@ -21,8 +22,16 @@
     mailaddress: "",
     userName: "",
     password: "",
-    error: false
+    error1: false,
+    error2: false,
   })
+  let createAccount = () => {
+    if(userData.mailaddress == '' || userData.userName == '' || userData.password == ''){
+userData.error2 = true
+    }else{
+accountCreate()
+    }
+  }
   let accountCreate = () => {
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
@@ -37,12 +46,12 @@
                 })
                 .then(function(res){
                     if(res.data == false) {
-                        userData.error = true
+                        userData.error1 = true
                     }else{
                         sessionStorage.setItem('id',res.data);
                         location.href
                     }
-                    console.log(res.data)
+                    console.log(res)
 
                 })
   }

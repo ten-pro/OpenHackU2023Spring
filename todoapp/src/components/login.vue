@@ -6,7 +6,7 @@
         <input type="text" placeholder="@mail" class="mail" v-model="userData.mailaddress">
         <input type="password" placeholder="password" class="pass" v-model="userData.password">
         <button @click="loginCheck" class="login">Login</button>
-        <div class="error" v-show="userData.loginerror">ログイン失敗</div>
+        <div class="error" v-show="userData.loginerror">メールアドレスまたはパスワードが異なります。</div>
         <div class="shinkiVue" @click="accountCreate">登録画面へ</div>
         </div>
     </div>
@@ -61,7 +61,7 @@ const accountCreate = () => {
 
     text-align: center;
     padding: 5% 0 5% 0;
-    margin: 10% 10% 5%  5%;
+    margin: 10% 5% 5%  5%;
     border-radius: 20px;
     box-shadow: 2px 2px gray;
     background-color: white;
