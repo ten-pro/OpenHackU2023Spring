@@ -5,11 +5,11 @@
             <div class="topLeft">グループ一覧</div>
             <div class="underLine"></div>
             <div class="list">
-                <div v-for="(item, groupIndex) in groupData.groupName" :key="groupIndex" class="con" @click="nextpage(groupIndex)">
-                    <div class="title">{{ item }}</div>
+                <div v-for="(item, groupIndex) in groupData" :key="groupIndex" class="con" @click="nextpage(groupIndex)">
+                    <div class="title">{{ item.groupName }}</div>
                     <div class="over">
                     <div class="members">
-                    <div v-for="(member, memberIndex) in groupData.groupMember[groupIndex]" :key="memberIndex"
+                    <div v-for="(member, memberIndex) in groupData[groupIndex].groupMember" :key="memberIndex"
                         class="members">
                         {{ member }} &nbsp;&nbsp;
                     </div>
@@ -28,16 +28,16 @@
 import axios from 'axios'
 import { reactive } from "vue"
 
-let groupData = reactive({
-    group_id:new Array(length),
-    groupLength: '',
-    memberLength: '',
-    groupName: new Array(length),
-    groupMember: [[new Array(length)],[]],
-})
+let groupData = reactive([
+    {
+        group_id:0,
+        groupName:"",
+        groupMember:new Array(),
+    }
+])
 
 let nextpage =(a: number)=>{
-    sessionStorage.setItem("group_id",String(groupData.group_id[a]))
+    sessionStorage.setItem("group_id",String(groupData[a].group_id))
     location.href="/grouptodo"
 }
 let create = () => {
@@ -46,7 +46,7 @@ let create = () => {
 
 
             axios
-                .post('http://mp-class.chips.jp/group_task/main.php', {
+                .post('https://mp-class.chips.jp/group_task/main.php', {
                     user_id: 2,
                     get_user_information: ''
                 }, {
@@ -56,16 +56,18 @@ let create = () => {
                 })
                 .then(function(res){
                     console.log(res.data)
-                    groupData.groupLength = res.data.length;
                     for(let i = 0;i < res.data.length; i ++) {
-                        groupData.group_id[i] = res.data[i].group_id
-                        groupData.groupName[i] = res.data[i].group_name;
-                        groupData.memberLength = res.data[i].group_user_list.length
+                        let members=new Array();
                         for(let j = 0; j < res.data[i].group_user_list.length; j ++){
-                            groupData.groupMember[i][j] = res.data[i].group_user_list[j].name
+                            members[j] = res.data[i].group_user_list[j].name
+                        }
+                        groupData[i]={
+                            group_id:res.data[i].group_id,
+                            groupName:res.data[i].group_name,
+                            groupMember:members,
                         }
                     }
-                    console.log(res.data[1].group_user_list.length)
+                    console.log(groupData)
                 })
   </script>
   <style scoped>

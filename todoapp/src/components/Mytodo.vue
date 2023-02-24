@@ -108,6 +108,7 @@ let kantodos = reactive([])
 let con_data = reactive({
   con_title:"",
   con_data:"",
+  todoid:0,
 })
 
 
@@ -134,6 +135,7 @@ const fileInput = ref(null);
       try{
         if (res.data.uncompletion != null) {
           for (let i = 0; i < res.data.uncompletion.length; i++) {
+            console.log(res.data.uncompletion[i].todo_id)
             let kari ={
               id: res.data.uncompletion[i].todo_id,
               title: res.data.uncompletion[i].title,
@@ -226,6 +228,8 @@ const kanhai =() =>{
 
 const todocomplete=(i)=>{
   swith.complete_page=true;
+  con_data.id=mitodos[i].id;
+  con_data.todoid=mitodos[i].id;
   con_data.con_title=mitodos[i].title;
   con_data.con_jouken=mitodos[i].jouken;
 }
@@ -255,7 +259,8 @@ const uploadFile = () => {
   const formData = new FormData();
   formData.append('image', file);
   formData.append('user_id', 2);
-    formData.append('todo_id', mitodos.id);
+    formData.append('todo_id', con_data.id);
+    console.log(con_data.id)
 
   // send FormData object to php using axios post method
   axios.post('http://mp-class.chips.jp/group_task/upload.php',formData)
