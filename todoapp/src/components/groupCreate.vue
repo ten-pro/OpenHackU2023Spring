@@ -70,7 +70,7 @@
                     }else{
                         swal("作成成功","グループ一覧画面に遷移します。","success",)
                         .then(function() {
-                            location.href = ""
+                            location.href = "./group"
                         })
                     }
                     console.log(res.data)

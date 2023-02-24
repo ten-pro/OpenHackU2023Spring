@@ -22,7 +22,7 @@
     bottom:2vh;
     left:4.7vw;
     border-radius: 50px;
-    border: solid 0.7vw black;
+    border: solid 0.7vw #33CFC6;
     background-color: #33CFC6;
 }
 .footer_icon{

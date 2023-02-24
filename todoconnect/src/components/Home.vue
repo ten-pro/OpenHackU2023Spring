@@ -3,6 +3,9 @@
         <div class="yyyymmdd">
             {{ date.year }}/{{ date.month }}/{{ date.day }}({{ date.youbi }})
         </div>
+        <div class="toro" @click="achievement">
+        <torofi />
+    </div>
         <div class="sum">
             <div class="suminner">
                 {{ todo.sum }}
@@ -51,13 +54,17 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 import axios from 'axios';
-
+import torofi from './torofi.vue'
+let now = new Date()
 let date = reactive({
-    year:2023,
-    month:12,
-    day:31,
-    youbi:"Fri"
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,
+    day: now.getDate(),
+    youbi: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][now.getDay()]
 })
+let achievement = () => {
+    location.href = './achievement'
+}
 let todo = reactive({
     sum:0,
     s:0,
@@ -93,6 +100,10 @@ axios
     })
 </script>
 <style scoped>
+.toro {
+    text-align: right;
+    margin: 0 5% 0 0;
+}
 .flex{
     display: flex;
 }
@@ -100,7 +111,7 @@ axios
     text-align: center;
     font-weight: bold;
     font-size:7vw;
-    margin-top:3vh;
+    margin-top:2vh;
 }
 .sum{
     display: flex;
@@ -108,7 +119,7 @@ axios
     align-items: center;
     border-radius: 50%;
     margin:auto;
-    margin-top:3vh;
+    margin-top:0vh;
     width:40vw;
     height:40vw;
     background-color: #6AD3DD;
@@ -184,10 +195,11 @@ axios
     background-color: rgb(196, 196, 196);
     border:solid 0.1vh black;
     border-radius: 20px;
+    
 }
 .title{
     position: relative;
-    width:70vw;
+    width:80vw;
     height:30vh;
     background-color:#6AD3DD;
     border:solid 0.1vh black;
@@ -200,14 +212,15 @@ axios
     display: flex;
     justify-content: center;
     align-items: center;
-    width:70vw;
+    width:80vw;
     height:5vh;
     color:white;
+    overflow: auto;
 }
 .task{
     position: relative;
     display:grid;
-    grid-template-rows: 2vh 5vh 5vh 17vh;
+    grid-template-rows: 2vh 5vh 7vh 17vh;
     grid-template-columns: 3vw 20vw 3vw 51vw 3vw;
     width:80vw;
     height:25vh;
@@ -216,6 +229,7 @@ axios
     border:solid 0.1vh black;
     border-radius: 20px;
     margin-left:-0.1vh;
+    overflow: auto;
 }
 .ran{
     position: absolute;

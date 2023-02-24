@@ -80,6 +80,7 @@
 <script setup>
 import axios from 'axios'
 import { reactive } from "vue"
+import swal from 'sweetalert';
 
 let title = reactive([])
 let kigen = reactive([])
@@ -161,6 +162,7 @@ const create_todo = () => {
     .then(function (res) {
       console.log("発行完了")
       console.log(res.data)
+      swal("発行完了","TODOを発行しました","success")
 
     })
 }

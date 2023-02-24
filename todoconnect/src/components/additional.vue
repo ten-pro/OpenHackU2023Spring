@@ -3,7 +3,7 @@
         <div class="main">
             <a href="/setting">
                 <div class="return">
-                    <img class="left" src="./PNG/left.png" />
+                    <img class="left" src="./PNG/leftorange.png" />
                 </div>
             </a>
             <div class="con">
@@ -49,7 +49,7 @@ show2: false})
                     }else{
                         swal("追加成功","グループ一覧画面に遷移します。","success",)
                         .then(function() {
-                            location.href = ""
+                            location.href = "/group"
                         })
                     }
                     console.log(res)
@@ -86,7 +86,7 @@ show2: false})
     width:30vw;
     height:6vh;
     background-color: white;
-    border: solid 2px #5AB4BD;
+    border: solid 2px #e58900;
     border-radius: 20px;
   }
  .left{
@@ -94,7 +94,7 @@ show2: false})
     height:4.5vh;
  }
   .arrow {
-    border: 1px solid #5AB4BD;
+    border: 1px solid #e58900;
     background-color: white;
     width: 25vw;
     height: 10vw;
@@ -123,7 +123,7 @@ show2: false})
     font-size: 5vw;
 }
 .gName {
-    border: 1px solid #5AB4BD;
+    border: 1px solid #e58900;
     border-radius: 10px;
     height: 6vh;
     width: 100%;
@@ -132,7 +132,7 @@ show2: false})
 }
 
 .create {
-    background-color: #5AB4BD;
+    background-color: #e58900;
     color: white;
     border-radius: 10px;
     padding: 3% 7%;
@@ -148,7 +148,7 @@ show2: false})
     box-shadow: 2px 2px rgb(129, 128, 128);
     padding: 3% 5%;
     display: flex;
-    background-color: #5AB4BD;
+    background-color: #e58900;
     color: white;
     font-size: 6vw;
     font-weight: bold;
@@ -160,7 +160,7 @@ show2: false})
     width: 70%;
     margin: 0% auto;
     height: 2px;
-    background-color: #5AB4BD;
+    background-color: #e58900;
 }
 .textarea {
     text-align: center;

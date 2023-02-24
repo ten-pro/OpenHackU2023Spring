@@ -1,16 +1,19 @@
 <template>
   <div>
-    <a href="/group">
-      <div class="return">
-          <img class="left" src="./PNG/left.png" />
-      </div>
-   </a>
-    <select>
+    <div class="topbutton">
+      <a href="/group">
+          <div class="return">
+              <img class="left" src="./PNG/leftorange.png" />
+          </div>
+      </a>
+      <a href="/setting"><div class="setting">設定</div></a>
+    </div>
+    <!-- <select>
       <option value="">並び替え</option>
       <option value="">昇順</option>
       <option value="">降順</option>
-    </select>
-    <a href="/setting"><div class="setting">設定</div></a>
+    </select> -->
+    
     <div class="tabs">
       <input id="all" type="radio" name="tab_item" checked @click="mihai()">
       <label class="tab_item" for="all">未完了</label>
@@ -22,19 +25,21 @@
         <div class="tab_content" id="mi_content" v-for="(mitodo,index) in mitodos" :key="index" v-show="swith.mi">
           <div class="mikanryou">
             <h3>{{ mitodo.title }}</h3>
+            <h4>{{ mitodo.name }}</h4>
             <p>期限日：{{ mitodo.day }}</p>
             <p>ランク：{{ mitodo.rank }}</p>
             <p>ジャンル：{{ mitodo.genre }}</p>
             <p>掲示板許可：{{ mitodo.keiji }}</p>
             <p>完了条件：{{ mitodo.jouken }}</p>
             <p class="syousai" v-show="detail[index]">詳細：{{ mitodo.shousai }}</p>
-            <img src="./PNG/sita.png" alt="" class="sita" v-show="!sita[index]" @click="zen(index)">
-            <img src="./PNG/ue.png" alt="" class="ue" v-show="ue[index]" @click="kakusu(index)">
+            <img src="./PNG/sitaorange.png" alt="" class="sita" v-show="!sita[index]" @click="zen(index)">
+            <img src="./PNG/ueorange.png" alt="" class="ue" v-show="ue[index]" @click="kakusu(index)">
           </div>
         </div>
         <div class="tab_content" id="kari_content" v-for="(karitodo,index) in karitodos" :key="index" v-show="swith.kari">
           <div class="karikanryou">
             <h3>{{ karitodo.title }}</h3>
+            <h4>{{ karitodo.name }}</h4>
             <p>期限日：{{ karitodo.day }}</p>
             <p>ランク：{{ karitodo.rank }}</p>
             <p>ジャンル：{{ karitodo.genre }}</p>
@@ -48,13 +53,14 @@
               <button class="button saku" @click="nofunk(index)">拒否</button>
             </div>
             <img v-show="detail[index]" :src="karitodo.gazou" style="max-width:50vw;max-height:30vh;"/>
-            <img src="./PNG/sita.png" alt="" class="sita1" v-show="!sita[index]" @click="zen(index)">
-            <img src="./PNG/ue.png" alt="" class="ue1" v-show="ue[index]" @click="kakusu(index)">
+            <img src="./PNG/sitaorange.png" alt="" class="sita1" v-show="!sita[index]" @click="zen(index)">
+            <img src="./PNG/ueorange.png" alt="" class="ue1" v-show="ue[index]" @click="kakusu(index)">
           </div>
         </div>
         <div class="tab_content" id="kan_content" v-for="(kantodo,index) in kantodos" :key="index" v-show="swith.kan">
           <div class="kanryou">
             <h3>{{ kantodo.title }}</h3>
+            <h4>{{ kantodo.name }}</h4>
             <p>期限日：{{ kantodo.day }}</p>
             <p>ランク：{{ kantodo.rank }}</p>
             <p>ジャンル：{{ kantodo.genre }}</p>
@@ -62,8 +68,8 @@
             <p>完了条件：{{ kantodo.jouken }}</p>
             <p class="syousai" v-show="detail[index]">詳細：{{ kantodo.shousai }}</p>
             <img v-show="detail[index]" :src="kantodo.gazou" style="max-width:50vw;max-height:30vh;"/>
-            <img src="./PNG/sita.png" alt="" class="sita2" v-show="!sita[index]" @click="zen(index)">
-            <img src="./PNG/ue.png" alt="" class="ue2" v-show="ue[index]" @click="kakusu(index)">
+            <img src="./PNG/sitaorange.png" alt="" class="sita2" v-show="!sita[index]" @click="zen(index)">
+            <img src="./PNG/ueorange.png" alt="" class="ue2" v-show="ue[index]" @click="kakusu(index)">
           </div>
         </div>
       </div>
@@ -131,6 +137,7 @@ window.onload = function () {
             let kari ={
               id: res.data[0].group_information.uncompletion[i].todo_id,
               title: res.data[0].group_information.uncompletion[i].title,
+              name: res.data[0].group_information.uncompletion[i].name,
               state: res.data[0].group_information.uncompletion[i].state,
               day: res.data[0].group_information.uncompletion[i].deadline,
               rank: res.data[0].group_information.uncompletion[i].rank,
@@ -153,6 +160,7 @@ window.onload = function () {
             karitodos[karitodos.length] = {
               id: res.data[0].group_information.tentative[i].todo_id,
               title: res.data[0].group_information.tentative[i].title,
+              name: res.data[0].group_information.tentative[i].name,
               state: res.data[0].group_information.tentative[i].state,
               day: res.data[0].group_information.tentative[i].deadline,
               rank: res.data[0].group_information.tentative[i].rank,
@@ -175,6 +183,7 @@ window.onload = function () {
             kantodos[kantodos.length] = {
               id: res.data[0].group_information.completion[i].todo_id,
               title: res.data[0].group_information.completion[i].title,
+              name: res.data[0].group_information.completion[i].name,
               state: res.data[0].group_information.completion[i].state,
               day: res.data[0].group_information.completion[i].deadline,
               rank: res.data[0].group_information.completion[i].rank,
@@ -279,21 +288,21 @@ const submit=()=>{
   height:5vh;
   font-size:5vh;
   border-radius: 50%;
-  background-color: #33CFC6;
+  background-color: #e58900;
 }
 .top{
   display: flex;
   justify-content: center;
   align-items: center;
   color:white;
-  background-color: #33CFC6;
+  background-color: #e58900;
   border-radius: 20px;
   font-size:3vh;
   width: 100%;
   height:25%;
 }
 .modal_title{
-  color:#33CFC6;
+  color:#e58900;
   font-size:3vh;
   text-align: center;
   margin-top:3vh;
@@ -307,13 +316,13 @@ const submit=()=>{
 .textarea{
   width:80%;
   height:20vh;
-  border: solid 0.3vh #33CFC6;
+  border: solid 0.3vh #e58900;
   border-radius: 10px;
 }
 .submit{
   width:40%;
   height:5vh;
-  background-color: #33CFC6;
+  background-color: #e58900;
   border-radius: 10px;
   color:white;
   font-size: 2.5vh;
@@ -323,19 +332,34 @@ const submit=()=>{
 
 
 
-
+.topbutton{
+  display: flex;
+  align-items: center;
+  margin-top:1.2vh;
+}
 .return{
-    margin-top:3vh;
-    margin-left:5vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left:5vw;
     width:30vw;
     height:6vh;
     background-color: white;
-    border: solid 2px #5AB4BD;
+    border: solid 2px #e58900;
     border-radius: 20px;
   }
+  .setting{
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left:40vw;
+  width:20vw;
+  height:4.5vh;
+  border-radius: 10px;
+  color:white;
+  background-color: #e58900;
+  border-radius: 10px;
+}
  .left{
     width:15vw;
     height:4.5vh;
@@ -354,22 +378,7 @@ select {
   position: fixed;
   top:20vw;
 }
-.setting{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width:20vw;
-  height:4.5vh;
-  border-radius: 10px;
-  color:white;
-  background-color: #33CFC6;
-  margin-left: 53%;
-  margin-top: 2%;
-  margin-bottom: 2%;
-  border-radius: 10px;
-  position: fixed;
-  top:20vw;
-}
+
 /*タブ切り替え全体のスタイル*/
 .tabs {
   background-color: #fff;
@@ -391,7 +400,7 @@ select {
 .tab_item {
   width: calc(100%/3);
   height: 50px;
-  border-bottom: 3px solid #5ab4bd;
+  border-bottom: 3px solid #e58900;
   background-color: #d9d9d9;
   line-height: 50px;
   font-size: 16px;
@@ -428,23 +437,23 @@ input[name="tab_item"] {
 
 /*選択されているタブのスタイルを変える*/
 .tabs input:checked + .tab_item {
-  background-color: #5ab4bd;
+  background-color: #e58900;
   color: #fff;
 }
 
 .mikanryou{
   position: relative;
-  border: 2px solid #5ab4bd;
+  border: 2px solid #e58900;
   border-radius: 10px;
 }
 .karikanryou{
   position: relative;
-  border: 2px solid #5ab4bd;
+  border: 2px solid #e58900;
   border-radius: 10px;
 }
 .kanryou{
   position: relative;
-  border: 2px solid #5ab4bd;
+  border: 2px solid #e58900;
   border-radius: 10px;
 }
 .button_area{
@@ -473,11 +482,14 @@ input[name="tab_item"] {
       height: 4vh;
       border-radius: 8px;
       font-size: 0.9em;
-      background-color: #5ab4bd;
+      background-color: #e58900;
       color: white;
       margin-top: 2vw;
     }
     h3{
+      margin-left: 4vw;
+    }
+    h4{
       margin-left: 4vw;
     }
     p{
@@ -490,37 +502,37 @@ input[name="tab_item"] {
     .sita{
       width: 5vw;
       position: absolute;
-      top:46vw;
       left: 70vw;
+      bottom:0px;
     }
     .ue{
       width: 5vw;
       position: absolute;
-      bottom: 2vw;
+      bottom: 1vw;
       left: 70vw;
     }
     .sita1{
       width: 5vw;
       position: absolute;
-      top:46vw;
+      bottom:0px;
       left: 70vw;
     }
     .ue1{
       width: 5vw;
       position: absolute;
-      bottom: 2vw;
+      bottom: 1vw;
       left: 70vw;
     }
     .sita2{
       width: 5vw;
       position: absolute;
-      top:46vw;
+      bottom:0px;
       left: 70vw;
     }
     .ue2{
       width: 5vw;
       position: absolute;
-      bottom: 2vw;
+      bottom: 1vw;
       left: 70vw;
     }
     

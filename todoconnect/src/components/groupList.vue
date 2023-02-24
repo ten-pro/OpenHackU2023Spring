@@ -92,7 +92,7 @@ let create = () => {
     margin: 10% 0 0 0;
   }
 .topLeft {
-    background-color: #5AB4BD;
+    background-color: #e58900;
     color: white;
     font-size: 7vw;
     padding: 10px 0px;
@@ -107,7 +107,7 @@ let create = () => {
 
 width: 100%;
 height: 5px;
-background-color: #5AB4BD;
+background-color: #e58900;
 }
 .list {
     background-color: white;
@@ -128,7 +128,7 @@ background-color: #5AB4BD;
     width: 95%;
     border-radius: 10px;
     height: auto;
-    border: 1px solid #5AB4BD;
+    border: 1px solid #e58900;
     text-align: center;
 }
 .title {
@@ -138,7 +138,7 @@ font-family: sans-serif;
 font-weight: bold;
 }
 .create {
-    background-color: #5AB4BD;
+    background-color: #e58900;
     color: white;
     font-size: 7vw;
     font-family: sans-serif;

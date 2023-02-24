@@ -1,4 +1,11 @@
 <template>
+    <div class="topbutton">
+      <a href="/home">
+          <div class="return">
+              <img class="left" src="./PNG/left.png" />
+          </div>
+      </a>
+    </div>
     <div class="wrap">
         <div class="flex">
             <div v-for="(item, index) in login" :key="index" class="flex_none">
@@ -117,6 +124,26 @@ axios
     })
 </script>
 <style scoped>
+.topbutton{
+    display: flex;
+    align-items: center;
+    margin-top:1.2vh;
+}
+.return{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left:5vw;
+    width:30vw;
+    height:6vh;
+    background-color: white;
+    border: solid 2px #5AB4BD;
+    border-radius: 20px;
+}
+.left{
+    width:15vw;
+    height:4.5vh;
+ }
 .wrap{
     width:100vw;
     height:80.5vh;
