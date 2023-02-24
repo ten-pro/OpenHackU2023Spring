@@ -40,7 +40,7 @@
   // create uploadFile method and expose it to template
 
   axios
-    .post('http://mp-class.chips.jp/group_task/main.php', {
+    .post('https://mp-class.chips.jp/group_task/main.php', {
         get_bulletinboard: ''
     }, {
         headers: {
@@ -48,10 +48,16 @@
         }
     })
     .then(function(res){
-        console.log(res.data[0].image_pass.slice(1))
+
         try {
           if (res.data!= null) {
+            console.log(res.data)
             for (let i = 0; i < res.data.length; i++) {
+              let image;
+              if(res.data[i].image_pass!=null){
+                image=res.data[i].image_pass;
+                image="https://mp-class.chips.jp/group_task"+image.slice(1);
+              }
               mitodos[i] = {
                 id: res.data[i].todo_id,
                 title: res.data[i].title,
@@ -63,7 +69,7 @@
                 genre: res.data[i].genre.genre_name,
                 genre_color: res.data[i].genre.genre_color,
                 keiji: res.data[i].permission==1?"許可":"拒否",
-                gazou: "https://mp-class.chips.jp/group_task" + res.data[i].image_pass.slice(1)
+                gazou: image,
               }
             }
             console.log(mitodos)

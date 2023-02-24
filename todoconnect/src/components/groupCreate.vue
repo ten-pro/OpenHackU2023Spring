@@ -9,11 +9,11 @@
             <div class="con">
                 <div class="groupName">
                     <div class="name">グループ名</div>
-                    <input type="text" class="gName" v-model="group_name">
+                    <input type="text" class="gName" v-model="group_name[0]">
                 </div>
                 <div class="userId">
                     <div class="id">ユーザーID</div>
-                    <input type="text" class="uName" v-model="userid">
+                    <input type="text" class="uName" v-model="addid[0]">
                 </div>
                 <div class="plusCircle">
                     <div class="plus" @click="add">+</div>
@@ -26,20 +26,21 @@
         </div>
     </div>
 </template>
-  <script setup lang="ts">
+  <script setup>
   import axios from 'axios'
   import { reactive } from "vue"
   import swal from 'sweetalert'
-  let group_name = reactive()
+  let group_name = reactive([])
   let userid = reactive([])
   let users= reactive([])
+  let addid=reactive([])
   let back = () => {
     location.href
   }
   const add =()=> {
             axios
-                .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id: userid,
+                .post('https://mp-class.chips.jp/group_task/main.php', {
+                    user_id: addid[0],
                     get_username: ''
                 }, {
                     headers: {
@@ -48,16 +49,17 @@
                 })
                 .then(function(res){
                     console.log(res.data)
-                        users[users.length]=res.data;
+                    userid[userid.length]=addid[0];
+                    users[users.length]=res.data;
                 })
   }
   const groupInfo = () => {
-    console.log(group_name)
-    console.log(users)
+    console.log(group_name[0])
+    console.log(userid)
             axios
-                .post('http://mp-class.chips.jp/group_task/main.php', {
-                    name: group_name,
-                    user_id: users,
+                .post('https://mp-class.chips.jp/group_task/main.php', {
+                    name: group_name[0],
+                    user_id: userid,
                     create_group: ''
                 }, {
                     headers: {

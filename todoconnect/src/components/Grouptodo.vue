@@ -114,7 +114,7 @@ let modalstate = reactive({
 
 window.onload = function () {
   axios
-    .post('http://mp-class.chips.jp/group_task/main.php', {
+    .post('https://mp-class.chips.jp/group_task/main.php', {
       group_id: sessionStorage.getItem("group_id"),
       get_todolist: ''
     }, {
@@ -138,7 +138,7 @@ window.onload = function () {
               shousai: res.data[0].group_information.uncompletion[i].messsage,
               genre: res.data[0].group_information.uncompletion[i].genre.genre_name,
               genre_color: res.data[0].group_information.uncompletion[i].genre.genre_color,
-              keiji: res.data[0].group_information.uncompletion[i].permission==0?"許可":"拒否",
+              keiji: res.data[0].group_information.uncompletion[i].permission==1?"許可":"拒否",
             }
             mitodos[i] = kari;
           }
@@ -160,7 +160,7 @@ window.onload = function () {
               shousai: res.data[0].group_information.tentative[i].messsage,
               genre: res.data[0].group_information.tentative[i].genre.genre_name,
               genre_color: res.data[0].group_information.tentative[i].genre.genre_color,
-              keiji: res.data[0].group_information.tentative[i].permission==0?"許可":"拒否",
+              keiji: res.data[0].group_information.tentative[i].permission==1?"許可":"拒否",
               gazou: "https://mp-class.chips.jp/group_task" + res.data[0].group_information.tentative[i].image_pass.slice(1)
             }
           }
@@ -182,7 +182,7 @@ window.onload = function () {
               shousai: res.data[0].group_information.completion[i].messsage,
               genre: res.data[0].group_information.completion[i].genre.genre_name,
               genre_color: res.data[0].group_information.completion[i].genre.genre_color,
-              keiji: res.data[0].group_information.completion[i].permission==0?"許可":"拒否",
+              keiji: res.data[0].group_information.completion[i].permission==1?"許可":"拒否",
               gazou: "https://mp-class.chips.jp/group_task" + res.data[0].group_information.completion[i].image_pass.slice(1)
             }
           }
@@ -232,7 +232,7 @@ const nofunk=(i)=>{
 }
 const submit=()=>{
   axios
-    .post('http://mp-class.chips.jp/group_task/main.php', {
+    .post('https://mp-class.chips.jp/group_task/main.php', {
         approval: modalstate.post,//true or false
         comment:modalstate.text,//承認or拒否理由
         todo_id: modalstate.todo_id,

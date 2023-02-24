@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <a href="/group">
+  <div v-show="swith.complete_page==false">
+    <a href="/home">
       <div class="return">
           <img class="left" src="./PNG/left.png" />
       </div>
@@ -10,7 +10,6 @@
       <option value="">昇順</option>
       <option value="">降順</option>
     </select>
-    <a href="/setting"><div class="setting">設定</div></a>
     <div class="tabs">
       <input id="all" type="radio" name="tab_item" checked @click="mihai()">
       <label class="tab_item" for="all">未完了</label>
@@ -28,6 +27,10 @@
             <p>掲示板許可：{{ mitodo.keiji }}</p>
             <p>完了条件：{{ mitodo.jouken }}</p>
             <p class="syousai" v-show="detail[index]">詳細：{{ mitodo.shousai }}</p>
+            <div class="button_area">
+              <button class="button kan" @click="todocomplete(index)">完了</button>
+              <button class="button saku" @click="sakujo(mitodo.id)">削除</button>
+            </div>
             <img src="./PNG/sita.png" alt="" class="sita" v-show="!sita[index]" @click="zen(index)">
             <img src="./PNG/ue.png" alt="" class="ue" v-show="ue[index]" @click="kakusu(index)">
           </div>
@@ -41,12 +44,6 @@
             <p>掲示板許可：{{ karitodo.keiji }}</p>
             <p>完了条件：{{ karitodo.jouken }}</p>
             <p class="syousai" v-show="detail[index]">詳細：{{ karitodo.shousai }}</p>
-            <img  alt="">
-            <div class="button_area">
-              <button class="button kan" @click="okfunk(index)">承認</button>
-              <!-- <paper-ripple fit></paper-ripple> -->
-              <button class="button saku" @click="nofunk(index)">拒否</button>
-            </div>
             <img v-show="detail[index]" :src="karitodo.gazou" style="max-width:50vw;max-height:30vh;"/>
             <img src="./PNG/sita.png" alt="" class="sita1" v-show="!sita[index]" @click="zen(index)">
             <img src="./PNG/ue.png" alt="" class="ue1" v-show="ue[index]" @click="kakusu(index)">
@@ -62,6 +59,10 @@
             <p>完了条件：{{ kantodo.jouken }}</p>
             <p class="syousai" v-show="detail[index]">詳細：{{ kantodo.shousai }}</p>
             <img v-show="detail[index]" :src="kantodo.gazou" style="max-width:50vw;max-height:30vh;"/>
+            <div class="button_area2">
+              <button class="button kan">完了</button>
+              <!-- <paper-ripple fit></paper-ripple> -->
+            </div>
             <img src="./PNG/sita.png" alt="" class="sita2" v-show="!sita[index]" @click="zen(index)">
             <img src="./PNG/ue.png" alt="" class="ue2" v-show="ue[index]" @click="kakusu(index)">
           </div>
@@ -69,76 +70,83 @@
       </div>
     </div>
   </div>
-  <div class="modal" v-show="modalstate.show" >
-    <div class="modal-content">
-      <img class="batu" src="./PNG/batu.png" @click="modalstate.show=false">
-      <div class="top">
-        理由を書いてください
-      </div>
-      <div class="modal_title">
-        {{modalstate.state}}
-      </div>
-      <div class="textareawrap">
-      <textarea class="textarea" v-model="modalstate.text"></textarea>
-      </div>
-      <div style="text-align:center;">
-        <button class="submit" @click="submit">
-          送信
-        </button>
-      </div>
+  <div v-show="swith.complete_page==true">
+    <div class="return">
+      <img class="left" src="./PNG/left.png" @click="swith.complete_page=false"/>
     </div>
+    <div class="image_area">
+      <div class="title">{{con_data.con_title}}</div>
+      <div class="subtitle">完了条件</div>
+      <div class="text">{{con_data.con_jouken}}</div>
+      <div class="subtitle select">画像選択</div>
+      <div class="text">
+        <label class="postlabel">
+          <input ref="fileInput" type="file" accept='image/*' @change="previewImage($event.target)" class="postinput">ファイルを選択
+        </label>
+      </div>
+      <div class="title"><img id="preview" :src="previewSrc" style="max-width:50vw;max-height:50vh;"></div>
+    </div>
+    <div class="upload_button_wrap"><button @click="uploadFile" class="upload_button">送信</button></div>
   </div>
 </template>
 <script setup>
 import axios from 'axios'
 import {reactive} from 'vue'
+import { ref } from "vue";
 let detail = reactive([false])
 let ue = reactive([false])
 let sita = reactive([false])
 let swith = reactive({
   mi:true,
   kari:false,
-  kan:false
+  kan:false,
+  complete_page:false,
 })
 let mitodos = reactive([])
 let karitodos = reactive([])
 let kantodos = reactive([])
-let modalstate = reactive({
-  state:"",
-  text:"",
-  show:false,
-  post:true,
-  todo_id:0,
+let con_data = reactive({
+  con_title:"",
+  con_data:"",
+  todoid:0,
 })
 
 
-window.onload = function () {
+
+const previewSrc = ref("")
+
+const fileInput = ref(null);
+
+// create uploadFile method and expose it to template
+
+
   axios
-    .post('http://mp-class.chips.jp/group_task/main.php', {
-      group_id: sessionStorage.getItem("group_id"),
-      get_todolist: ''
+    .post('https://mp-class.chips.jp/group_task/main.php', {
+        user_id:2,
+        get_user_todolist: ''
     }, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
     })
     .then(function (res) {
       console.log(res.data)
       //未完了
       try{
-        if (res.data[0].group_information.uncompletion != null) {
-          for (let i = 0; i < res.data[0].group_information.uncompletion.length; i++) {
+        if (res.data.uncompletion != null) {
+          for (let i = 0; i < res.data.uncompletion.length; i++) {
+            console.log(res.data.uncompletion[i].todo_id)
             let kari ={
-              id: res.data[0].group_information.uncompletion[i].todo_id,
-              title: res.data[0].group_information.uncompletion[i].title,
-              state: res.data[0].group_information.uncompletion[i].state,
-              day: res.data[0].group_information.uncompletion[i].deadline,
-              rank: res.data[0].group_information.uncompletion[i].rank,
-              jouken: res.data[0].group_information.uncompletion[i].todo_condition,
-              shousai: res.data[0].group_information.uncompletion[i].messsage,
-              genre: res.data[0].group_information.uncompletion[i].genre.genre_name,
-              genre_color: res.data[0].group_information.uncompletion[i].genre.genre_color,
-              keiji: res.data[0].group_information.uncompletion[i].permission==0?"許可":"拒否",
+              id: res.data.uncompletion[i].todo_id,
+              title: res.data.uncompletion[i].title,
+              state: res.data.uncompletion[i].state,
+              day: res.data.uncompletion[i].deadline,
+              rank: res.data.uncompletion[i].rank,
+              jouken: res.data.uncompletion[i].todo_condition,
+              shousai: res.data.uncompletion[i].messsage,
+              genre: res.data.uncompletion[i].genre.genre_name,
+              genre_color: res.data.uncompletion[i].genre.genre_color,
+              keiji: res.data.uncompletion[i].permission==1?"許可":"拒否",
             }
             mitodos[i] = kari;
           }
@@ -148,42 +156,43 @@ window.onload = function () {
       }
       //仮完了
       try {
-        if (res.data[0].group_information.tentative != null) {
-          for (let i = 0; i < res.data[0].group_information.tentative.length; i++) {
-            karitodos[karitodos.length] = {
-              id: res.data[0].group_information.tentative[i].todo_id,
-              title: res.data[0].group_information.tentative[i].title,
-              state: res.data[0].group_information.tentative[i].state,
-              day: res.data[0].group_information.tentative[i].deadline,
-              rank: res.data[0].group_information.tentative[i].rank,
-              jouken: res.data[0].group_information.tentative[i].todo_condition,
-              shousai: res.data[0].group_information.tentative[i].messsage,
-              genre: res.data[0].group_information.tentative[i].genre.genre_name,
-              genre_color: res.data[0].group_information.tentative[i].genre.genre_color,
-              keiji: res.data[0].group_information.tentative[i].permission==0?"許可":"拒否",
-              gazou: "https://mp-class.chips.jp/group_task" + res.data[0].group_information.tentative[i].image_pass.slice(1)
+        if (res.data.tentative != null) {
+          for (let i = 0; i < res.data.tentative.length; i++) {
+            karitodos[i] = {
+              id: res.data.tentative[i].todo_id,
+              title: res.data.tentative[i].title,
+              state: res.data.tentative[i].state,
+              day: res.data.tentative[i].deadline,
+              rank: res.data.tentative[i].rank,
+              jouken: res.data.tentative[i].todo_condition,
+              shousai: res.data.tentative[i].messsage,
+              genre: res.data.tentative[i].genre.genre_name,
+              genre_color: res.data.tentative[i].genre.genre_color,
+              keiji: res.data.tentative[i].permission==1?"許可":"拒否",
+              gazou: "https://mp-class.chips.jp/group_task" + res.data.tentative[i].image_pass.slice(1)
             }
           }
+          console.log(karitodos)
         }
       } catch (error) {
 
       }
       //完了
       try {
-        if (res.data[0].group_information.completion != null) {
-          for (let i = 0; i < res.data[0].group_information.completion.length; i++) {
-            kantodos[kantodos.length] = {
-              id: res.data[0].group_information.completion[i].todo_id,
-              title: res.data[0].group_information.completion[i].title,
-              state: res.data[0].group_information.completion[i].state,
-              day: res.data[0].group_information.completion[i].deadline,
-              rank: res.data[0].group_information.completion[i].rank,
-              jouken: res.data[0].group_information.completion[i].todo_condition,
-              shousai: res.data[0].group_information.completion[i].messsage,
-              genre: res.data[0].group_information.completion[i].genre.genre_name,
-              genre_color: res.data[0].group_information.completion[i].genre.genre_color,
-              keiji: res.data[0].group_information.completion[i].permission==0?"許可":"拒否",
-              gazou: "https://mp-class.chips.jp/group_task" + res.data[0].group_information.completion[i].image_pass.slice(1)
+        if (res.data.completion != null) {
+          for (let i = 0; i < res.data.completion.length; i++) {
+            kantodos[i] = {
+              id: res.data.completion[i].todo_id,
+              title: res.data.completion[i].title,
+              state: res.data.completion[i].state,
+              day: res.data.completion[i].deadline,
+              rank: res.data.completion[i].rank,
+              jouken: res.data.completion[i].todo_condition,
+              shousai: res.data.completion[i].messsage,
+              genre: res.data.completion[i].genre.genre_name,
+              genre_color: res.data.completion[i].genre.genre_color,
+              keiji: res.data.completion[i].permission==1?"許可":"拒否",
+              gazou: "https://mp-class.chips.jp/group_task" + res.data.completion[i].image_pass.slice(1)
             }
           }
         }
@@ -191,7 +200,6 @@ window.onload = function () {
 
       }
     })
-}
 const zen =(i)=>{
   detail[i] = !detail[i]
   sita[i] = !sita[i]
@@ -218,112 +226,80 @@ const kanhai =() =>{
   swith.kan=true;
 }
 
-const okfunk=(i)=>{
-  modalstate.state="承認";
-  modalstate.show=true;
-  modalstate.post=true;
-  modalstate.todo_id=karitodos[i].id
+const todocomplete=(i)=>{
+  swith.complete_page=true;
+  con_data.id=mitodos[i].id;
+  con_data.todoid=mitodos[i].id;
+  con_data.con_title=mitodos[i].title;
+  con_data.con_jouken=mitodos[i].jouken;
 }
-const nofunk=(i)=>{
-  modalstate.state="拒否";
-  modalstate.show=true;
-  modalstate.post=false;
-  modalstate.todo_id=karitodos[i].id
-}
-const submit=()=>{
+// 削除機能です！！
+const sakujo = (todo_id)=>{
   axios
-    .post('http://mp-class.chips.jp/group_task/main.php', {
-        approval: modalstate.post,//true or false
-        comment:modalstate.text,//承認or拒否理由
-        todo_id: modalstate.todo_id,
-        user_id: 1,
-        group_id: 13,
-        approval_todo: ''
-    }, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
+                .post('https://mp-class.chips.jp/group_task/main.php', {
+                    delete_todo: '',
+                    todo_id:todo_id
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function (res) {
+                  location.href = ""
+                    console.log(res.data)
+                })
+}
+
+
+const uploadFile = () => {
+  const file = fileInput.value.files[0];
+  if (!file) return;
+
+  // create FormData object and append file object
+  const formData = new FormData();
+  formData.append('image', file);
+  formData.append('user_id', 2);
+    formData.append('todo_id', con_data.id);
+    console.log(con_data.id)
+
+  // send FormData object to php using axios post method
+  axios.post('https://mp-class.chips.jp/group_task/upload.php',formData)
+    .then(response => {
+      // handle success response
+      console.log(response.data);
     })
-    .then(
-        (response) => (console.log(response.data))
-    )
+    .catch(error => {
+      // handle error response
+      console.error(error);
+    });
+}
+defineExpose({
+  uploadFile,
+});
+
+const previewImage = (obj) => {
+  const fileReader = new FileReader()
+  fileReader.onload = () => {
+    previewSrc.value = fileReader.result
+  }
+  fileReader.readAsDataURL(obj.files[0])
 }
 </script>
 <style scoped>
-.modal{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-}
-.modal-content {
-  position: fixed;
-  width:70%;
-  height:60%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #fefefe;
-  border: 0.3vh solid #ACD9DE;
-  border-radius: 20px;
-  z-index: 1000;
-}
-.batu{
-  position:absolute;
-  right:-2vh;
-  top:-2vh;
-  width:5vh;
-  height:5vh;
-  font-size:5vh;
-  border-radius: 50%;
-  background-color: #33CFC6;
-}
-.top{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color:white;
-  background-color: #33CFC6;
-  border-radius: 20px;
-  font-size:3vh;
-  width: 100%;
-  height:25%;
-}
-.modal_title{
-  color:#33CFC6;
-  font-size:3vh;
+select {
+  appearance: none;
+  width: 20%;
+  padding: 10px;
+  border: 1px solid #999;
+  background: #eee;
   text-align: center;
-  margin-top:3vh;
-}
-.textareawrap{
-  height:20vh;
-  text-align: center;
-  margin-top:3vh;
-  margin-bottom: 5vh;
-}
-.textarea{
-  width:80%;
-  height:20vh;
-  border: solid 0.3vh #33CFC6;
+  margin-left: 75%;
+  margin-top: 2%;
+  margin-bottom: 2%;
   border-radius: 10px;
+  position: fixed;
+  top:20vw;
 }
-.submit{
-  width:40%;
-  height:5vh;
-  background-color: #33CFC6;
-  border-radius: 10px;
-  color:white;
-  font-size: 2.5vh;
-  margin:auto;
-}
-
-
-
-
-
 .return{
     margin-top:3vh;
     margin-left:5vw;
@@ -340,36 +316,6 @@ const submit=()=>{
     width:15vw;
     height:4.5vh;
  }
-select {
-  appearance: none;
-  width: 20%;
-  padding: 10px;
-  border: 1px solid #999;
-  background: #eee;
-  text-align: center;
-  margin-left: 75%;
-  margin-top: 2%;
-  margin-bottom: 2%;
-  border-radius: 10px;
-  position: fixed;
-  top:20vw;
-}
-.setting{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width:20vw;
-  height:4.5vh;
-  border-radius: 10px;
-  color:white;
-  background-color: #33CFC6;
-  margin-left: 53%;
-  margin-top: 2%;
-  margin-bottom: 2%;
-  border-radius: 10px;
-  position: fixed;
-  top:20vw;
-}
 /*タブ切り替え全体のスタイル*/
 .tabs {
   background-color: #fff;
@@ -523,5 +469,82 @@ input[name="tab_item"] {
       bottom: 2vw;
       left: 70vw;
     }
-    
+    .kari_gazou{
+      width:50vw;
+      height: 20vh;
+      padding: 4vw;
+    }
+
+
+
+    /* ポストの方 */
+    .return{
+  margin-top:3vh;
+  margin-left:5vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width:30vw;
+  height:6vh;
+  background-color: white;
+  border: solid 2px #5AB4BD;
+  border-radius: 20px;
+}
+.left{
+  width:15vw;
+  height:4.5vh;
+}
+.image_area{
+  width:90vw;
+  height:55vh;
+  margin:auto;
+  margin-top:3vh;
+  background-color: white;
+  border: solid 2px #5AB4BD;
+  border-radius: 10px;
+  overflow: auto;
+}
+.title{
+  margin-top:3vh;
+  margin-bottom: 2vh;
+  font-size: 4.5vh;
+  text-align: center;
+  font-weight: bold;
+}
+.subtitle{
+  margin-bottom: 3vh;
+  font-size:3vh;
+  text-align: center;
+  font-weight: bold;
+}
+.text{
+  text-align: center;
+  margin-bottom: 5vh;
+}
+.select{
+  font-size:2.5vh;
+}
+.postlabel{
+  padding: 1vh 3.5vh;
+  color: #ffffff;
+  background-color:#5AB4BD;
+  cursor: pointer;
+}
+.postinput{
+  display: none;
+}
+.upload_button_wrap{
+  text-align: center;
+  color:#ffffff;
+}
+.upload_button{
+  margin-top: 3vh;
+  width:30vw;
+  height:5vh;
+  background-color: #5AB4BD;
+  color: white;
+  font-weight: bold;
+  font-size: 2.5vh;
+  border-radius: 120px;
+}
 </style>

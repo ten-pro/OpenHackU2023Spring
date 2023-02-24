@@ -110,7 +110,7 @@ let select = reactive({
 
 
 axios
-  .post('http://mp-class.chips.jp/group_task/main.php', {
+  .post('https://mp-class.chips.jp/group_task/main.php', {
     user_id: 2,
     get_user_information: ''
   }, {
@@ -133,16 +133,16 @@ axios
 //後ここだけ
 const create_todo = () => {
   if (keizi[0] == true) {
-    keizi_sum = 0//許可
+    keizi_sum = 1//許可
   } else {
-    keizi_sum = 1//拒否
+    keizi_sum = 0//拒否
   }
   if(sele[0]!=true){
     select.user_id=2;
   }
   console.log([select.user_id,select.title,select.syousai,select.group_id,select.janru,select.kigen,select.rank,keizi_sum,select.jouken])
   axios
-    .post('http://mp-class.chips.jp/group_task/main.php', {
+    .post('https://mp-class.chips.jp/group_task/main.php', {
       create_todo: '',
       title: select.title,
       message: select.syousai, //詳細
