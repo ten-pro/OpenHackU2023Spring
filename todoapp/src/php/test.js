@@ -21,15 +21,15 @@ const app = new Vue({
             group_name: 'テストグループ',
             user_ids: [],
 
-            todo_id:0,
-            image_id:1,
+            todo_id: 0,
+            image_id: 1,
 
-            approval:false,
+            approval: false,
 
-            title_id:0,
+            title_id: 0,
 
-            title_name:'',
-            title_conditions:'',
+            title_name: '',
+            title_conditions: '',
         }
     },
     //ページが読み込まれた時に動く処理
@@ -109,6 +109,21 @@ const app = new Vue({
 
                 })
         },
+        delete_todo() {
+            axios
+                .post('http://mp-class.chips.jp/group_task/main.php', {
+                    delete_todo: '',
+                    todo_id: this.todo_id
+                }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(function (res) {
+                    console.log(res.data)
+
+                })
+        },
         request_todo() {
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
@@ -129,7 +144,7 @@ const app = new Vue({
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
                     approval: this.approval,
-                    comment:this.comment,
+                    comment: this.comment,
                     todo_id: this.todo_id,
                     user_id: this.user_id,
                     group_id: this.group_id,
@@ -181,7 +196,7 @@ const app = new Vue({
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
                     user_id: this.user_id,
-                    group_id:this.group_id,
+                    group_id: this.group_id,
                     add_affiliation: ''
                 }, {
                     headers: {
@@ -196,7 +211,7 @@ const app = new Vue({
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
                     user_id: this.user_id,
-                    group_id:this.group_id,
+                    group_id: this.group_id,
                     delete_affiliation: ''
                 }, {
                     headers: {
@@ -211,8 +226,8 @@ const app = new Vue({
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
                     user_id: this.user_id,
-                    group_id:this.group_id,
-                    group_name:this.group_name,
+                    group_id: this.group_id,
+                    group_name: this.group_name,
                     rename_group: ''
                 }, {
                     headers: {
@@ -226,7 +241,7 @@ const app = new Vue({
         get_group_userlist() {
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
-                    group_id:this.group_id,
+                    group_id: this.group_id,
                     get_group_userlist: ''
                 }, {
                     headers: {
@@ -240,7 +255,7 @@ const app = new Vue({
         get_completionlist() {
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
-                    group_id:this.group_id,
+                    group_id: this.group_id,
                     get_completionlist: ''
                 }, {
                     headers: {
@@ -254,7 +269,7 @@ const app = new Vue({
         get_user_information() {
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id:this.user_id,
+                    user_id: this.user_id,
                     get_user_information: ''
                 }, {
                     headers: {
@@ -268,7 +283,7 @@ const app = new Vue({
         rank_count() {
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id:this.user_id,
+                    user_id: this.user_id,
                     rank_count: ''
                 }, {
                     headers: {
@@ -282,7 +297,7 @@ const app = new Vue({
         get_title() {
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id:this.user_id,
+                    user_id: this.user_id,
                     get_title: ''
                 }, {
                     headers: {
@@ -296,7 +311,7 @@ const app = new Vue({
         get_user_todolist() {
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id:this.user_id,
+                    user_id: this.user_id,
                     get_user_todolist: ''
                 }, {
                     headers: {
@@ -310,8 +325,8 @@ const app = new Vue({
         update_usertitle() {
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id:this.user_id,
-                    title_id:this.title_id,
+                    user_id: this.user_id,
+                    title_id: this.title_id,
                     update_usertitle: ''
                 }, {
                     headers: {
@@ -325,7 +340,7 @@ const app = new Vue({
         get_header() {
             axios
                 .post('http://mp-class.chips.jp/group_task/main.php', {
-                    user_id:this.user_id,
+                    user_id: this.user_id,
                     get_header: ''
                 }, {
                     headers: {

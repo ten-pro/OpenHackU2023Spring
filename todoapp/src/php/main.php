@@ -31,6 +31,12 @@ if (isset($_POST['create_todo']) == true) {
     $data = $class->create_todo($_POST['title'], $_POST['message'], $_POST['user_id'], $_POST['group_id'], $_POST['genre_id'], $_POST['deadline'], $_POST['rank'], $_POST['permission'], $_POST['todo_condition']);
 }
 
+//delete_todoの引数がある時の処理
+if (isset($_POST['delete_todo']) == true) {
+    $class = new Todo();
+    $data = $class->delete_todo($_POST['todo_id']);
+}
+
 //request_todoの引数がある時の処理
 if (isset($_POST['request_todo']) == true) {
     $class = new Todo();
@@ -40,7 +46,7 @@ if (isset($_POST['request_todo']) == true) {
 //approval_todoの引数がある時の処理
 if (isset($_POST['approval_todo']) == true) {
     $class = new Todo();
-    $data = $class->approval_todo($_POST['approval'], $_POST['comment'], $_POST['todo_id'], $_POST['user_id'], $_POST['group_id']);
+    $data = $class->approval_todo($_POST['approval'], $_POST['comment'], $_POST['todo_id']);
 }
 
 //create_titleの引数がある時の処理
@@ -101,6 +107,12 @@ if (isset($_POST['get_group_userlist']) == true) {
 if (isset($_POST['get_completionlist']) == true) {
     $class = new Todo();
     $data = $class->get_completionlist($_POST['group_id']);
+}
+
+//get_todolistの引数がある時の処理
+if (isset($_POST['get_todolist']) == true) {
+    $class = new Todo();
+    $data = $class->get_todolist($_POST['group_id']);
 }
 
 //get_user_informationの引数がある時の処理

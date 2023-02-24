@@ -34,6 +34,24 @@ class Todo
         return $data;
     }
 
+    function delete_todo($todo_id)
+    {
+        try {
+            $pdo = $this->get_pdo();
+
+            $sql = "DELETE FROM todo_tbl WHERE todo_id = ?";
+            $ps = $pdo->prepare($sql);
+            $ps->bindValue(1, $todo_id, PDO::PARAM_STR);
+            $ps->execute();
+            $data = true;
+        } catch (Exception $e) {
+            $data = $e;
+        } catch (Error $e) {
+            $data = $e;
+        }
+        return $data;
+    }
+
     function request_todo($image_id, $todo_id, $user_id)
     {
         try {
@@ -41,10 +59,10 @@ class Todo
 
             $sql = "UPDATE todo_tbl SET image_id = ? ,todo_state = ? WHERE todo_id = ? AND user_id = ?;";
             $ps = $pdo->prepare($sql);
-            $ps->bindValue(1, $image_id, PDO::PARAM_STR);
+            $ps->bindValue(1, $image_id, PDO::PARAM_INT);
             $ps->bindValue(2, "仮完了", PDO::PARAM_STR);
-            $ps->bindValue(3, $todo_id, PDO::PARAM_STR);
-            $ps->bindValue(4, $user_id, PDO::PARAM_STR);
+            $ps->bindValue(3, $todo_id, PDO::PARAM_INT);
+            $ps->bindValue(4, $user_id, PDO::PARAM_INT);
             $ps->execute();
             $data = true;
         } catch (Exception $e) {
@@ -56,29 +74,25 @@ class Todo
     }
 
 
-    function approval_todo($approval, $comment, $todo_id, $user_id, $group_id)
+    function approval_todo($approval, $comment, $todo_id)
     {
         try {
             $pdo = $this->get_pdo();
             $data = "OK";
             if ($approval == true) {
-                $sql = "UPDATE todo_tbl SET comment = ? ,todo_state = ? WHERE todo_id = ? AND user_id != ? AND group_id = ?;";
+                $sql = "UPDATE todo_tbl SET comment = ? ,todo_state = ? WHERE todo_id = ?;";
                 $ps = $pdo->prepare($sql);
                 $ps->bindValue(1, $comment, PDO::PARAM_STR);
                 $ps->bindValue(2, "完了", PDO::PARAM_STR);
                 $ps->bindValue(3, $todo_id, PDO::PARAM_INT);
-                $ps->bindValue(4, $user_id, PDO::PARAM_INT);
-                $ps->bindValue(5, $group_id, PDO::PARAM_INT);
                 $ps->execute();
                 $data = "completion";
             } else {
-                $sql2 = "UPDATE todo_tbl SET comment = ? ,todo_state = ? WHERE todo_id = ? AND user_id != ? AND group_id = ?;";
+                $sql2 = "UPDATE todo_tbl SET comment = ? ,todo_state = ? WHERE todo_id = ?;";
                 $ps2 = $pdo->prepare($sql2);
                 $ps2->bindValue(1, $comment, PDO::PARAM_STR);
                 $ps2->bindValue(2, "未完了", PDO::PARAM_STR);
                 $ps2->bindValue(3, $todo_id, PDO::PARAM_INT);
-                $ps2->bindValue(4, $user_id, PDO::PARAM_INT);
-                $ps2->bindValue(5, $group_id, PDO::PARAM_INT);
                 $ps2->execute();
                 $data = "uncompletion";
             }
@@ -326,11 +340,12 @@ class Todo
             $ps->bindValue(2, "未完了", PDO::PARAM_STR);
             $ps->execute();
             $search = $ps->fetchAll();
+            $class = new Login();
             foreach ($search as $row) {
                 //todo_title,todo_message,todo_state,user_id,group_id,genre_id,deadline,rank,permission,todo_condition
                 $data[] = array(
-                    'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'user_id' => $row['user_id'],
-                    'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition']
+                    'todo_id' => $row['todo_id'], 'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'user_id' => $row['user_id'], 'name' => $class->get_username($row['user_id']),
+                    'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition'], 'comment' => $row['comment']
                 );
             }
         } catch (Exception $e) {
@@ -351,12 +366,13 @@ class Todo
             $ps->bindValue(1, $group_id, PDO::PARAM_INT);
             $ps->bindValue(2, "仮完了", PDO::PARAM_STR);
             $ps->execute();
+            $class = new Login();
             $search = $ps->fetchAll();
             foreach ($search as $row) {
                 //todo_title,todo_message,todo_state,user_id,group_id,genre_id,deadline,rank,permission,todo_condition
                 $data[] = array(
-                    'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'user_id' => $row['user_id'], 'image_pass' => $this->get_image_pass($row['image_id']),
-                    'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition']
+                    'todo_id' => $row['todo_id'], 'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'user_id' => $row['user_id'], 'image_pass' => $this->get_image_pass($row['image_id']), 'name' => $class->get_username($row['user_id']),
+                    'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition'], 'comment' => $row['comment']
                 );
             }
         } catch (Exception $e) {
@@ -377,12 +393,13 @@ class Todo
             $ps->bindValue(1, $group_id, PDO::PARAM_INT);
             $ps->bindValue(2, "完了", PDO::PARAM_STR);
             $ps->execute();
+            $class = new Login();
             $search = $ps->fetchAll();
             foreach ($search as $row) {
                 //todo_title,todo_message,todo_state,user_id,group_id,genre_id,deadline,rank,permission,todo_condition
                 $data[] = array(
-                    'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'user_id' => $row['user_id'], 'image_pass' => $this->get_image_pass($row['image_id']),
-                    'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition']
+                    'todo_id' => $row['todo_id'], 'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'user_id' => $row['user_id'], 'image_pass' => $this->get_image_pass($row['image_id']), 'name' => $class->get_username($row['user_id']),
+                    'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition'], 'comment' => $row['comment']
                 );
             }
         } catch (Exception $e) {
@@ -408,8 +425,8 @@ class Todo
             foreach ($search as $row) {
                 //todo_title,todo_message,todo_state,user_id,group_id,genre_id,deadline,rank,permission,todo_condition
                 $data[] = array(
-                    'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'user_id' => $row['user_id'], 'group_id' => $row['group_id'], 'group_name' => $this->get_groupname($row['group_id']),
-                    'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition']
+                    'todo_id' => $row['todo_id'], 'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'user_id' => $row['user_id'], 'group_id' => $row['group_id'], 'group_name' => $this->get_groupname($row['group_id']),
+                    'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition'], 'comment' => $row['comment']
                 );
             }
         } catch (Exception $e) {
@@ -434,8 +451,8 @@ class Todo
             foreach ($search as $row) {
                 //todo_title,todo_message,todo_state,user_id,group_id,genre_id,deadline,rank,permission,todo_condition
                 $data[] = array(
-                    'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'user_id' => $row['user_id'], 'group_id' => $row['group_id'], 'group_name' => $this->get_groupname($row['group_id']), 'image_pass' => $this->get_image_pass($row['image_id']),
-                    'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition']
+                    'todo_id' => $row['todo_id'], 'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'user_id' => $row['user_id'], 'group_id' => $row['group_id'], 'group_name' => $this->get_groupname($row['group_id']), 'image_pass' => $this->get_image_pass($row['image_id']),
+                    'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition'], 'comment' => $row['comment']
                 );
             }
         } catch (Exception $e) {
@@ -460,8 +477,8 @@ class Todo
             foreach ($search as $row) {
                 //todo_title,todo_message,todo_state,user_id,group_id,genre_id,deadline,rank,permission,todo_condition
                 $data[] = array(
-                    'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'user_id' => $row['user_id'], 'group_id' => $row['group_id'], 'group_name' => $this->get_groupname($row['group_id']), 'image_pass' => $this->get_image_pass($row['image_id']),
-                    'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition']
+                    'todo_id' => $row['todo_id'], 'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'user_id' => $row['user_id'], 'group_id' => $row['group_id'], 'group_name' => $this->get_groupname($row['group_id']), 'image_pass' => $this->get_image_pass($row['image_id']),
+                    'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition'], 'comment' => $row['comment']
                 );
             }
         } catch (Exception $e) {
@@ -477,6 +494,20 @@ class Todo
     {
         try {
             $data = array('uncompletion' => $this->get_group_uncompletion($group_id), 'tentative' => $this->get_group_tentative($group_id), 'completion' => $this->get_group_completion($group_id));
+        } catch (Exception $e) {
+            $data = $e;
+        } catch (Error $e) {
+            $data = $e;
+        }
+        return $data;
+    }
+
+
+    //グループtodo画面の情報をメソッド
+    function get_todolist($group_id)
+    {
+        try {
+            $data[] = array('group_name' => $this->get_groupname($group_id), 'group_information' => $this->get_completionlist($group_id), 'group_user_list' => $this->get_group_userlist($group_id));
         } catch (Exception $e) {
             $data = $e;
         } catch (Error $e) {
@@ -554,7 +585,7 @@ class Todo
             foreach ($search as $row) {
                 //todo_title,todo_message,todo_state,user_id,group_id,genre_id,deadline,rank,permission,todo_condition
                 $data[] = array(
-                    'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'user_id' => $row['user_id'],
+                    'todo_id' => $row['todo_id'], 'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'user_id' => $row['user_id'],
                     'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition']
                 );
             }
@@ -731,7 +762,7 @@ class Todo
                 //todo_title,todo_message,todo_state,user_id,group_id,genre_id,deadline,rank,permission,todo_condition
                 $data[] = array(
                     'title' => $row['todo_title'], 'messsage' => $row['todo_message'], 'state' => $row['todo_state'], 'name' => $class->get_username($row['user_id']), 'image_pass' => $this->get_image_pass($row['image_id']),
-                    'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition']
+                    'genre' => $this->get_genre($row['genre_id']), 'deadline' => $row['deadline'], 'rank' => $row['rank'], 'permission' => $row['permission'], 'todo_condition' => $row['todo_condition'], 'comment' => $row['comment']
                 );
             }
         } catch (Exception $e) {

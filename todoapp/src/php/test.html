@@ -106,12 +106,16 @@
         <input type="button" value="Get_rank_count" @click="rank_count"><br>
         <input type="button" value="Get_title" @click="get_title"><br>
 
+        
+        <h2>TODO削除</h2>
+        todo_id<input type="number" v-model="todo_id"><br>
+        <input type="button" value="delete" @click="delete_todo"><br>
 
         
-        <h2>称号作成</h2>
+        <!-- <h2>称号作成</h2>
         称号名<input type="text" v-model="title_name"><br>
         詳細<input type="text" v-model="title_conditions"><br>
-        <input type="button" value="Create" @click="create_title"><br>
+        <input type="button" value="Create" @click="create_title"><br> -->
     </div>
     <!-- vue.jsのCDN -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
