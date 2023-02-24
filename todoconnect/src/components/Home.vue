@@ -40,7 +40,8 @@
 
         <div class="today">
             <div class="title">
-                <div class="title_message">{{ todo.title }}</div>
+                <div class="title_message" v-show="nulls.error==false">{{ todo.title }}</div>
+                <div class="title_message" v-show="nulls.error==true">未完了TODOはありません</div>
                     <div class="task">
                         <div class="ran">ランク</div><div class="rank_text">{{ todo.rank }}</div>
                         <div class="kan">完了条件</div><div class="condition_text">{{ todo.todo_condition }}</div>
@@ -76,6 +77,9 @@ let todo = reactive({
     todo_condition:"",
     rank:"",
 })
+let nulls = reactive({
+    error:false,
+})
 axios
     .post('https://mp-class.chips.jp/group_task/main.php', {
         user_id:2,
@@ -87,16 +91,20 @@ axios
     })
     .then(function(res){
         console.log(res.data)
+        try{
         let data=res.data;
-        todo.sum=data[4].all;
-        todo.s=data[0].count;
-        todo.a=data[1].count;
-        todo.b=data[2].count;
-        todo.c=data[3].count;
-        todo.title=data[5].title;
-        todo.message=data[5].messsage;
-        todo.todo_condition=data[5].todo_condition;
-        todo.rank=data[5].rank;
+            todo.sum=data[4].all;
+            todo.s=data[0].count;
+            todo.a=data[1].count;
+            todo.b=data[2].count;
+            todo.c=data[3].count;
+            todo.title=data[5].title;
+            todo.message=data[5].messsage;
+            todo.todo_condition=data[5].todo_condition;
+            todo.rank=data[5].rank;
+        }catch(error){
+            nulls.error=true;
+        }
     })
 </script>
 <style scoped>

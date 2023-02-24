@@ -15,6 +15,7 @@
       <input id="design" type="radio" name="tab_item" @click="kanhai()">
       <label class="tab_item" for="design">完了</label>
       <div class="todos">
+        <h3 style="text-align: center;" v-show="nulls.mi && swith.mi">現在未完了TODOはありません</h3>
         <div class="tab_content" id="mi_content" v-for="(mitodo,index) in mitodos" :key="index" v-show="swith.mi">
           <div class="mikanryou">
             <h3>{{ mitodo.title }}</h3>
@@ -32,6 +33,7 @@
             <img src="./PNG/ue.png" alt="" class="ue" v-show="ue[index]" @click="kakusu(index)">
           </div>
         </div>
+        <h3 style="text-align: center;" v-show="nulls.kari && swith.kari">現在未完了TODOはありません</h3>
         <div class="tab_content" id="kari_content" v-for="(karitodo,index) in karitodos" :key="index" v-show="swith.kari">
           <div class="karikanryou">
             <h3>{{ karitodo.title }}</h3>
@@ -46,6 +48,7 @@
             <img src="./PNG/ue.png" alt="" class="ue1" v-show="ue[index]" @click="kakusu(index)">
           </div>
         </div>
+        <h3 style="text-align: center;" v-show="nulls.kan && swith.kan">現在完了TODOはありません</h3>
         <div class="tab_content" id="kan_content" v-for="(kantodo,index) in kantodos" :key="index" v-show="swith.kan">
           <div class="kanryou">
             <h3>{{ kantodo.title }}</h3>
@@ -104,7 +107,11 @@ let con_data = reactive({
   con_data:"",
   todoid:0,
 })
-
+let nulls = reactive({
+  mi:false,
+  kari:false,
+  kan:false,
+})
 
 
 const previewSrc = ref("")
@@ -144,6 +151,8 @@ const fileInput = ref(null);
             }
             mitodos[i] = kari;
           }
+        }else{
+          nulls.mi=true;
         }
       }catch(error){
 
@@ -168,6 +177,9 @@ const fileInput = ref(null);
           }
           console.log(karitodos)
         }
+        else{
+          nulls.kari=true;
+        }
       } catch (error) {
 
       }
@@ -189,6 +201,9 @@ const fileInput = ref(null);
               gazou: "https://mp-class.chips.jp/group_task" + res.data.completion[i].image_pass.slice(1)
             }
           }
+        }
+        else{
+          nulls.kan=true;
         }
       } catch (error) {
 
@@ -272,6 +287,10 @@ const uploadFile = () => {
     .then(response => {
       // handle success response
       console.log(response.data);
+      swal("送信完了","未完了TODOの完了報告を送信しました")
+      .then(function(){
+        location.href="./mytodo";
+      })
     })
     .catch(error => {
       // handle error response
