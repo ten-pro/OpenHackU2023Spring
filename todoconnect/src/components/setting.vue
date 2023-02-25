@@ -32,7 +32,7 @@
   let userData = reactive({
     membarLength: '',
     membarArray:new Array(),
-    session_user_id: 2,
+    session_user_id: sessionStorage.getItem("id"),
     groupName: '',
     deleteName: [''],
     deleteID: '',

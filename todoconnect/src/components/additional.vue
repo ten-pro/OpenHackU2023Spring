@@ -36,7 +36,7 @@ show2: false})
             axios
                 .post('https://mp-class.chips.jp/group_task/main.php', {
                     user_id: userData.id,
-                    group_id: 13,
+                    group_id: sessionStorage.getItem("group_id"),
                     add_affiliation: ''
                 }, {
                     headers: {

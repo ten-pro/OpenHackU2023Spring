@@ -12,7 +12,7 @@
             <div class="mikanryou">
               <h3>{{ mitodo.title }}</h3>
               <h4>{{ mitodo.name }}</h4>
-              <p>期限日：{{ mitodo.day }}</p>
+              <p>期限日：{{ mitodo.day.slice(0,11) + mitodo.day.slice(19) }}</p>
               <p>ランク：{{ mitodo.rank }}</p>
               <p>ジャンル：{{ mitodo.genre }}</p>
               <p>掲示板許可：{{ mitodo.keiji }}</p>
@@ -72,6 +72,7 @@
               }
             }
             console.log(mitodos)
+            mitodos.reverse();
           }
         } catch (error) {
   
@@ -88,7 +89,6 @@
     detail[i] = !detail[i]
     sita[i] = !sita[i]
   }
-  
   </script>
   <style scoped>
   select {
@@ -233,7 +233,7 @@
       .sita{
         width: 5vw;
         position: absolute;
-        bottom:0px;
+        bottom:1vw;
         left: 70vw;
       }
       .ue{
@@ -245,7 +245,7 @@
       .sita1{
         width: 5vw;
         position: absolute;
-        bottom:0px;
+        bottom:1vw;
         left: 70vw;
       }
       .ue1{
@@ -257,7 +257,7 @@
       .sita2{
         width: 5vw;
         position: absolute;
-        bottom:0px;
+        bottom:1vw;
         left: 70vw;
       }
       .ue2{

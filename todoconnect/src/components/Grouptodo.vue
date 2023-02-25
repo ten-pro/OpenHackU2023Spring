@@ -27,11 +27,12 @@
           <div class="mikanryou">
             <h3>{{ mitodo.title }}</h3>
             <h4>{{ mitodo.name }}</h4>
-            <p>期限日：{{ mitodo.day }}</p>
+            <p :class="{tyouka:date.year>=mitodo.day.slice(0,4) && date.month>=mitodo.day.slice(5,7) && date.day>mitodo.day.slice(8,10)}">期限日：{{ mitodo.day.slice(0,11) + mitodo.day.slice(19) }}</p>
             <p>ランク：{{ mitodo.rank }}</p>
             <p>ジャンル：{{ mitodo.genre }}</p>
             <p>掲示板許可：{{ mitodo.keiji }}</p>
             <p>完了条件：{{ mitodo.jouken }}</p>
+            <p v-show="mitodo.comment!=null">拒否理由：{{ mitodo.comment }}</p>
             <p class="syousai" v-show="detail[index]">詳細：{{ mitodo.shousai }}</p>
             <img src="./PNG/sitaorange.png" alt="" class="sita" v-show="!sita[index]" @click="zen(index)">
             <img src="./PNG/ueorange.png" alt="" class="ue" v-show="ue[index]" @click="kakusu(index)">
@@ -42,7 +43,7 @@
           <div class="karikanryou">
             <h3>{{ karitodo.title }}</h3>
             <h4>{{ karitodo.name }}</h4>
-            <p>期限日：{{ karitodo.day }}</p>
+            <p :class="{tyouka:date.year>=karitodo.day.slice(0,4) && date.month>=karitodo.day.slice(5,7) && date.day>karitodo.day.slice(8,10)}">期限日：{{ karitodo.day.slice(0,11) + karitodo.day.slice(19) }}</p>
             <p>ランク：{{ karitodo.rank }}</p>
             <p>ジャンル：{{ karitodo.genre }}</p>
             <p>掲示板許可：{{ karitodo.keiji }}</p>
@@ -64,11 +65,12 @@
           <div class="kanryou">
             <h3>{{ kantodo.title }}</h3>
             <h4>{{ kantodo.name }}</h4>
-            <p>期限日：{{ kantodo.day }}</p>
+            <p>期限日：{{ kantodo.day.slice(0,11) + kantodo.day.slice(19) }}</p>
             <p>ランク：{{ kantodo.rank }}</p>
             <p>ジャンル：{{ kantodo.genre }}</p>
             <p>掲示板許可：{{ kantodo.keiji }}</p>
             <p>完了条件：{{ kantodo.jouken }}</p>
+            <p v-show="kantodo.comment!=null">承認理由:{{ kantodo.comment }}</p>
             <p class="syousai" v-show="detail[index]">詳細：{{ kantodo.shousai }}</p>
             <img v-show="detail[index]" :src="kantodo.gazou" style="max-width:50vw;max-height:30vh;"/>
             <img src="./PNG/sitaorange.png" alt="" class="sita2" v-show="!sita[index]" @click="zen(index)">
@@ -118,11 +120,19 @@ let modalstate = reactive({
   show:false,
   post:true,
   todo_id:0,
+  user_id:sessionStorage.getItem("id")
 })
 let nulls = reactive({
   mi:false,
   kari:false,
   kan:false,
+})
+let now = new Date()
+let date = reactive({
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,
+    day: now.getDate(),
+    youbi: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][now.getDay()]
 })
 
 window.onload = function () {
@@ -150,6 +160,7 @@ window.onload = function () {
               rank: res.data[0].group_information.uncompletion[i].rank,
               jouken: res.data[0].group_information.uncompletion[i].todo_condition,
               shousai: res.data[0].group_information.uncompletion[i].messsage,
+              comment: res.data[0].group_information.uncompletion[i].comment,
               genre: res.data[0].group_information.uncompletion[i].genre.genre_name,
               genre_color: res.data[0].group_information.uncompletion[i].genre.genre_color,
               keiji: res.data[0].group_information.uncompletion[i].permission==1?"許可":"拒否",
@@ -168,6 +179,7 @@ window.onload = function () {
           for (let i = 0; i < res.data[0].group_information.tentative.length; i++) {
             karitodos[karitodos.length] = {
               id: res.data[0].group_information.tentative[i].todo_id,
+              user_id:res.data[0].group_information.tentative[i].user_id,
               title: res.data[0].group_information.tentative[i].title,
               name: res.data[0].group_information.tentative[i].name,
               state: res.data[0].group_information.tentative[i].state,
@@ -200,6 +212,7 @@ window.onload = function () {
               rank: res.data[0].group_information.completion[i].rank,
               jouken: res.data[0].group_information.completion[i].todo_condition,
               shousai: res.data[0].group_information.completion[i].messsage,
+              comment: res.data[0].group_information.completion[i].comment,
               genre: res.data[0].group_information.completion[i].genre.genre_name,
               genre_color: res.data[0].group_information.completion[i].genre.genre_color,
               keiji: res.data[0].group_information.completion[i].permission==1?"許可":"拒否",
@@ -242,37 +255,57 @@ const kanhai =() =>{
 }
 
 const okfunk=(i)=>{
-  modalstate.state="承認";
-  modalstate.show=true;
-  modalstate.post=true;
-  modalstate.todo_id=karitodos[i].id
+  console.log(karitodos[i].user_id+" "+modalstate.user_id)
+  if(karitodos[i].user_id==modalstate.user_id){
+    swal("自分のタスクは承認できません","","error")
+  }else{
+    modalstate.state="承認";
+    modalstate.show=true;
+    modalstate.post=true;
+    modalstate.todo_id=karitodos[i].id
+  }
 }
 const nofunk=(i)=>{
-  modalstate.state="拒否";
-  modalstate.show=true;
-  modalstate.post=false;
-  modalstate.todo_id=karitodos[i].id
+  // if(karitodos[i].user_id==modalstate.user_id){
+  //   swal("自分のタスクは拒否できません","","error")
+  // }else{
+    modalstate.state="拒否";
+    modalstate.show=true;
+    modalstate.post=false;
+    modalstate.todo_id=karitodos[i].id
+  // }
 }
 const submit=()=>{
-  axios
-    .post('https://mp-class.chips.jp/group_task/main.php', {
-        approval: modalstate.post,//true or false
-        comment:modalstate.text,//承認or拒否理由
-        todo_id: modalstate.todo_id,
-        user_id: 1,
-        group_id: 13,
-        approval_todo: ''
-    }, {
-        headers: {
-            'Content-Type': 'multipart/form-data'
-        }
-    })
-    .then(
-        (response) => (console.log(response.data))
-    )
+  if(modalstate.text==""){
+    swal("理由を入力してください","","error")
+  }else{
+    axios
+      .post('https://mp-class.chips.jp/group_task/main.php', {
+          approval: modalstate.state,//true or false
+          comment:modalstate.text,//承認or拒否理由
+          todo_id: modalstate.todo_id,
+          user_id: sessionStorage.getItem("id"),
+          group_id: sessionStorage.getItem("group_id"),
+          approval_todo: ''
+      }, {
+          headers: {
+              'Content-Type': 'multipart/form-data'
+          }
+      })
+      .then(function(res){
+        console.log(res)
+        swal("送信完了",modalstate.state+"情報を送信しました","success")
+        .then(function(){
+          location.href="./grouptodo"
+        })
+      })
+    }
 }
 </script>
 <style scoped>
+.tyouka{
+  color:red;
+}
 .modal{
   position: fixed;
   top: 0;
@@ -517,7 +550,7 @@ input[name="tab_item"] {
       width: 5vw;
       position: absolute;
       left: 70vw;
-      bottom:0px;
+      bottom:1vw;
     }
     .ue{
       width: 5vw;
@@ -528,7 +561,7 @@ input[name="tab_item"] {
     .sita1{
       width: 5vw;
       position: absolute;
-      bottom:0px;
+      bottom:1vw;
       left: 70vw;
     }
     .ue1{
@@ -540,7 +573,7 @@ input[name="tab_item"] {
     .sita2{
       width: 5vw;
       position: absolute;
-      bottom:0px;
+      bottom:1vw;
       left: 70vw;
     }
     .ue2{

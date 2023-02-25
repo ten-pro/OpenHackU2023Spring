@@ -9,7 +9,7 @@
     <div class="wrap">
         <div class="flex">
             <div v-for="(item, index) in login" :key="index" class="flex_none">
-                <div  class="childwrap" :class="{noget:item.noget==false}" @click="loginfunc(index)">
+                <div  class="childwrap" :class="{noget:item.noget==false}" @click="syougou(item.id,item.noget)">
                     <div class="title">{{ item.title }}</div>
                     <div class="text">{{ item.text }}</div>
                 </div>
@@ -18,7 +18,7 @@
         </div>
         <div class="flex">
             <div v-for="(item, index) in renlogin" :key="index" class="flex_none">
-                <div  class="childwrap" :class="{noget:item.noget==false}">
+                <div  class="childwrap" :class="{noget:item.noget==false}" @click="syougou(item.id,item.noget)">
                     <div class="title">{{ item.title }}</div>
                     <div class="text">{{ item.text }}</div>
                 </div>
@@ -27,7 +27,7 @@
         </div>
         <div class="flex">
             <div v-for="(item, index) in sum" :key="index" class="flex_none">
-                <div  class="childwrap" :class="{noget:item.noget==false}">
+                <div  class="childwrap" :class="{noget:item.noget==false}" @click="syougou(item.id,item.noget)">
                     <div class="title">{{ item.title }}</div>
                     <div class="text">{{ item.text }}</div>
                 </div>
@@ -36,7 +36,7 @@
         </div>
         <div class="flex">
             <div v-for="(item, index) in buysum" :key="index" class="flex_none">
-                <div  class="childwrap" :class="{noget:item.noget==false}">
+                <div  class="childwrap" :class="{noget:item.noget==false}" @click="syougou(item.id,item.noget)">
                     <div class="title">{{ item.title }}</div>
                     <div class="text">{{ item.text }}</div>
                 </div>
@@ -45,7 +45,7 @@
         </div>
         <div class="flex">
             <div v-for="(item, index) in studysum" :key="index" class="flex_none">
-                <div  class="childwrap" :class="{noget:item.noget==false}">
+                <div  class="childwrap" :class="{noget:item.noget==false}" @click="syougou(item.id,item.noget)">
                     <div class="title">{{ item.title }}</div>
                     <div class="text">{{ item.text }}</div>
                 </div>
@@ -54,7 +54,7 @@
         </div>
         <div class="flex">
             <div v-for="(item, index) in limitsum" :key="index" class="flex_none">
-                <div  class="childwrap" :class="{noget:item.noget==false}">
+                <div  class="childwrap" :class="{noget:item.noget==false}" @click="syougou(item.id,item.noget)">
                     <div class="title">{{ item.title }}</div>
                     <div class="text">{{ item.text }}</div>
                 </div>
@@ -67,16 +67,17 @@
 import axios from 'axios';
 import { reactive } from 'vue';
 import swal from 'sweetalert';
-let login = reactive([{title:"",text:"",noget:false}])
-let renlogin = reactive([{title:"",text:"",noget:false}])
-let sum = reactive([{title:"",text:"",noget:false}])
-let buysum = reactive([{title:"",text:"",noget:false}])
-let studysum = reactive([{title:"",text:"",noget:false}])
-let limitsum = reactive([{title:"",text:"",noget:false}])
+let login = reactive([{id:"",title:"",text:"",noget:false}])
+let renlogin = reactive([{id:"",title:"",text:"",noget:false}])
+let sum = reactive([{id:"",title:"",text:"",noget:false}])
+let buysum = reactive([{id:"",title:"",text:"",noget:false}])
+let studysum = reactive([{id:"",title:"",text:"",noget:false}])
+let limitsum = reactive([{id:"",title:"",text:"",noget:false}])
+
 
 axios
     .post('https://mp-class.chips.jp/group_task/main.php', {
-        user_id:2,
+        user_id:sessionStorage.getItem("id"),
         get_title: ''
     }, {
         headers: {
@@ -86,7 +87,8 @@ axios
     .then(function(res){
         console.log(res.data)
         for(let i=0;i<8;i++){
-            let kari={title:"",text:"",noget:false};
+            let kari={id:"",title:"",text:"",noget:false};
+            kari.id=res.data[i].title;
             kari.title=res.data[i].name;
             kari.text=res.data[i].conditions;
             kari.noget=res.data[i].get;
@@ -94,35 +96,40 @@ axios
         }
         login[0].noget=true;
         for(let i=8;i<16;i++){
-            let kari={title:"",text:"",noget:false};
+            let kari={id:"",title:"",text:"",noget:false};
+            kari.id=res.data[i].title;
             kari.title=res.data[i].name;
             kari.text=res.data[i].conditions;
             kari.noget=res.data[i].get;
             renlogin[i-8]=kari;
         }
         for(let i=16;i<24;i++){
-            let kari={title:"",text:"",noget:false};
+            let kari={id:"",title:"",text:"",noget:false};
+            kari.id=res.data[i].title;
             kari.title=res.data[i].name;
             kari.text=res.data[i].conditions;
             kari.noget=res.data[i].get;
             sum[i-16]=kari;
         }
         for(let i=24;i<32;i++){
-            let kari={title:"",text:"",noget:false};
+            let kari={id:"",title:"",text:"",noget:false};
+            kari.id=res.data[i].title;
             kari.title=res.data[i].name;
             kari.text=res.data[i].conditions;
             kari.noget=res.data[i].get;
             buysum[i-24]=kari;
         }
         for(let i=32;i<40;i++){
-            let kari={title:"",text:"",noget:false};
+            let kari={id:"",title:"",text:"",noget:false};
+            kari.id=res.data[i].title;
             kari.title=res.data[i].name;
             kari.text=res.data[i].conditions;
             kari.noget=res.data[i].get;
             studysum[i-32]=kari;
         }
         for(let i=40;i<48;i++){
-            let kari={title:"",text:"",noget:false};
+            let kari={id:"",title:"",text:"",noget:false};
+            kari.id=res.data[i].title;
             kari.title=res.data[i].name;
             kari.text=res.data[i].conditions;
             kari.noget=res.data[i].get;
@@ -131,12 +138,39 @@ axios
         console.log(renlogin);
     })
 
-const loginfunc=(i)=>{
-    if(login[i].noget==true){
-
-    }else{
-        swal("設定失敗","この実績は獲得していません","error")
-    }
+const syougou=(i,hantei)=>{
+    swal({
+        title: "確認",
+        text: "この実績を称号に設定しますか？",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+    .then((willDelete) => {
+        if (willDelete) {
+            if(hantei){
+                axios
+                    .post('https://mp-class.chips.jp/group_task/main.php', {
+                        user_id: sessionStorage.getItem("id"),
+                        title_id: i,
+                        update_usertitle: ''
+                    }, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    .then(function(){
+                        swal("成功","称号に設定しました","success")
+                        .then(function(){
+                            location.href="/achievement"
+                        })
+                    }
+                    )
+            }else{
+                swal("設定失敗","この実績は獲得していません","error")
+            }
+        }
+    })
 }
 </script>
 <style scoped>

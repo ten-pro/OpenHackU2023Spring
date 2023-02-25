@@ -5,7 +5,10 @@
             <div class="topLeft">グループ一覧</div>
             <div class="underLine"></div>
             <div class="list">
-                <div v-for="(item, groupIndex) in groupData" :key="groupIndex" class="con" @click="nextpage(groupIndex)">
+                <h3 v-show="nulls.state==true">
+                    グループに所属していません
+                </h3>
+                <div v-for="(item, groupIndex) in groupData" :key="groupIndex" class="con" @click="nextpage(groupIndex)" v-show="nulls.state==false">
                     <div class="title">{{ item.groupName }}</div>
                     <div class="over">
                     <div class="members">
@@ -35,6 +38,9 @@ let groupData = reactive([
         groupMember:new Array(),
     }
 ])
+let nulls = reactive({
+    state:false
+})
 
 let nextpage =(a: number)=>{
     sessionStorage.setItem("group_id",String(groupData[a].group_id))
@@ -47,7 +53,7 @@ let create = () => {
 
             axios
                 .post('https://mp-class.chips.jp/group_task/main.php', {
-                    user_id: 2,
+                    user_id: sessionStorage.getItem("id"),
                     get_user_information: ''
                 }, {
                     headers: {
@@ -56,16 +62,20 @@ let create = () => {
                 })
                 .then(function(res){
                     console.log(res.data)
-                    for(let i = 0;i < res.data.length; i ++) {
-                        let members=new Array();
-                        for(let j = 0; j < res.data[i].group_user_list.length; j ++){
-                            members[j] = res.data[i].group_user_list[j].name
+                    try{
+                        for(let i = 0;i < res.data.length; i ++) {
+                            let members=new Array();
+                            for(let j = 0; j < res.data[i].group_user_list.length; j ++){
+                                members[j] = res.data[i].group_user_list[j].name
+                            }
+                            groupData[i]={
+                                group_id:res.data[i].group_id,
+                                groupName:res.data[i].group_name,
+                                groupMember:members,
+                            }
                         }
-                        groupData[i]={
-                            group_id:res.data[i].group_id,
-                            groupName:res.data[i].group_name,
-                            groupMember:members,
-                        }
+                    }catch(error){
+                        nulls.state=true
                     }
                     console.log(groupData)
                 })

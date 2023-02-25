@@ -1,6 +1,40 @@
 <template>
   <div >
     <div class="hakkou_area">
+
+      <!-- <div style="display:flex">
+        <div class="name_area">
+          <h3>タイトル</h3>
+          <h3>期限日</h3>
+          <h3>完了条件</h3>
+          <h3>ランク</h3>
+          <h3>ジャンル</h3>
+          <h3>詳細</h3>
+        </div>
+        <div class="input_area">
+          <input type="text" v-model="select.title" placeholder="買い物（チャーハンの材料）">
+          <input type="date" v-model="select.kigen">
+          <input type="text" v-model="select.jouken" placeholder="ネギ、卵、ベーコンを購入">
+          <select v-model="select.rank">
+            <option value=""></option>
+            <option value="S">S</option>
+            <option value="A">A</option>
+            <option value="B">B</option>
+            <option value="C">C</option>
+          </select>
+          <select v-model="select.janru">
+            <option value=""></option>
+            <option value="1">買い物</option>
+            <option value="2">勉強・仕事</option>
+            <option value="3">予定・締め切り</option>
+            <option value="4">その他</option>
+          </select>
+          <textarea type="text" v-model="select.syousai" placeholder="ネギは緑色が濃ゆいものを、卵は10個入り、ベーコンはブロックで２５０円ぐらいの物を選択"></textarea>
+        </div>
+      </div> -->
+      <div style="text-align:right;font-size:3vw;color:#5AB4BD;">
+        セレクトボックスの文字拡大<input type="checkbox" v-model="select.zoom"/>
+      </div>
       <div class="title_area">
         <h3>タイトル</h3>
         <input type="text" class="text_area title" v-model="select.title" placeholder="買い物（チャーハンの材料）">
@@ -15,8 +49,7 @@
       </div>
       <div class="rank_area">
         <h3>ランク</h3>
-        <select class="select3" v-model="select.rank">
-          <option value=""></option>
+        <select class="select3" v-model="select.rank" :class="{zoom:select.zoom}">
           <option value="S">S</option>
           <option value="A">A</option>
           <option value="B">B</option>
@@ -25,7 +58,7 @@
       </div>
       <div class="janru_area">
         <h3>ジャンル</h3>
-        <select class="select4" v-model="select.janru">
+        <select class="select4" v-model="select.janru" :class="{zoom:select.zoom}">
           <option value=""></option>
           <option value="1">買い物</option>
           <option value="2">勉強・仕事</option>
@@ -56,8 +89,8 @@
           </div>
         </div>
         <div>
-          <select class="select1" @change="group_click" v-model="select.group_id">
-          <option value="">グループ名</option>
+          <select class="select1" @change="group_click" v-model="select.group_id" :class="{zoom:select.zoom}">
+          <option value="0">グループ名</option>
           <option :value="item.id" v-for="(item,index) in group_data" :key="index">
             {{item.groupname}}
           </option>
@@ -66,8 +99,8 @@
         <div>
           <div v-for="(item,i) in group_data" :key="i">
             <div v-show="nowgroup.number==i">
-              <select class="select2" v-show="sele[0]" v-model="select.user_id">
-              <option value="">ユーザー名</option>
+              <select class="select2" v-show="sele[0]" v-model="select.user_id" :class="{zoom:select.zoom}">
+              <option value="0">ユーザー名</option>
               <option :value="item.id" v-for="(item,index) in group_data[nowgroup.number].groupusers" :key="index">{{ item.name }}</option>
               </select>
             </div>
@@ -102,17 +135,18 @@ let select = reactive({
   title:"",
   group_id:0,
   user_id:0,
-  rank:"",
-  janru:"",
+  rank:"C",
+  janru:"1",
   syousai:"",
   kigen:"",
   jouken:"",
+  zoom:false,
 })
 
 
 axios
   .post('https://mp-class.chips.jp/group_task/main.php', {
-    user_id: 2,
+    user_id: sessionStorage.getItem("id"),
     get_user_information: ''
   }, {
     headers: {
@@ -121,13 +155,20 @@ axios
   })
   .then(function (res) {
     console.log(res)
-    for (let i = 0; i < res.data.length; i++) {
-      group_data[group_data.length] = {
-        id: res.data[i].group_id,
-        groupname: res.data[i].group_name,
-        groupusers: res.data[i].group_user_list
+    try{
+      for (let i = 0; i < res.data.length; i++) {
+        group_data[group_data.length] = {
+          id: res.data[i].group_id,
+          groupname: res.data[i].group_name,
+          groupusers: res.data[i].group_user_list
+        }
+        console.log(res.data[i].group_id)
       }
-      console.log(res.data[i].group_id)
+    }catch(error){
+      swal("グループを作ろう","グループを先に作成してからTODOを発行してください","error")
+      .then(function(){
+        location.href="/group";
+      })
     }
     console.log(group_data)
   })
@@ -139,9 +180,17 @@ const create_todo = () => {
     keizi_sum = 0//拒否
   }
   if(sele[0]!=true){
-    select.user_id=2;
+    select.user_id=sessionStorage.getItem("id");
   }
   console.log([select.user_id,select.title,select.syousai,select.group_id,select.janru,select.kigen,select.rank,keizi_sum,select.jouken])
+  if(select.user_id!=0 &&
+     select.title!="" &&
+     select.syousai!="" &&
+     select.group_id!=0 &&
+     select.janru!="" &&
+     select.kigen!="" &&
+     select.rank!="" &&
+     select.jouken!=""){
   axios
     .post('https://mp-class.chips.jp/group_task/main.php', {
       create_todo: '',
@@ -163,8 +212,13 @@ const create_todo = () => {
       console.log("発行完了")
       console.log(res.data)
       swal("発行完了","TODOを発行しました","success")
-
+      .then(function(){
+        // location.href="/mytodo"
+      })
     })
+  }else{
+    swal("情報不足","全て入力してください","error")
+  }
 }
 
 const group_click=(event)=>{
@@ -173,6 +227,34 @@ const group_click=(event)=>{
 }
 </script>
 <style scoped>
+/* .name_area{
+  display: flex;
+  flex-flow:column;
+  justify-content: space-around;
+  width:35vw;
+  height:40vh;
+  margin-top:3vh;
+  margin-left:3vw;
+  text-align: right;
+}
+.input_area{
+  display: flex;
+  flex-flow:column;
+  justify-content: space-around;
+  width:40vw;
+  height:40vh;
+  margin-top:3vh;
+  margin-left:3vw;
+  text-align: right;
+} */
+.zoom{
+  font-size:10vw;
+}
+
+
+
+
+
 .sc {
   white-space: nowrap;
 }
@@ -189,7 +271,7 @@ textarea::-webkit-scrollbar {
 ::placeholder {
   color: #7c7c7c;
   text-align: center;
-  font-size: 5vw;
+  font-size: 4vw;
   opacity: 0.9;
   font-weight: bold;
 }
@@ -216,7 +298,7 @@ textarea::-webkit-scrollbar {
 .title_area{
   display: flex;
   position: absolute;
-  top: 4vw;
+  top: 7vw;
   left: 7vw;
 }
 .kigen_area{
@@ -451,9 +533,8 @@ h4{
 }
 
 .select1 {
-  appearance: none;
-  width: 30%;
-  padding: 10px;
+  width: 30vw;
+  height:4.5vh;
   border: 1px solid #5AB4BD;
   background-color: white;
   color: #5AB4BD;
@@ -464,9 +545,8 @@ h4{
   left: 10vw;
 }
 .select2 {
-  appearance: none;
-  width: 30%;
-  padding: 10px;
+  width: 30vw;
+  height:4.5vh;
   border: 1px solid #5AB4BD;
   background-color: white;
   color: #5AB4BD;
@@ -482,9 +562,8 @@ h4{
   padding:0
 }
 .select3 {
-  appearance: none;
   width:52vw ;
-  padding: 10px;
+  height:4.5vh;
   border: 1px solid #5AB4BD;
   background-color: white;
   color: #5AB4BD;
@@ -493,9 +572,8 @@ h4{
   left: 20vw;
 }
 .select4 {
-  appearance: none;
+  height:4.5vh;
   width:52vw ;
-  padding: 10px;
   border: 1px solid #5AB4BD;
   background-color: white;
   color: #5AB4BD;

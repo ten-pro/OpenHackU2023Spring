@@ -82,7 +82,7 @@ let nulls = reactive({
 })
 axios
     .post('https://mp-class.chips.jp/group_task/main.php', {
-        user_id:2,
+        user_id:sessionStorage.getItem("id"),
         rank_count: ''
     }, {
         headers: {

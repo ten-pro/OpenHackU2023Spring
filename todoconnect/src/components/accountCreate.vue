@@ -8,7 +8,7 @@
         <input type="password" placeholder="password" class="password" v-model="userData.password">
         <button class="login" @click="accountCreate">Sign Up</button>
         <div class="error" v-show="userData.error">入力内容を再確認してくだい</div>
-        <div class="touroku" @click="touroku">登録画面へ</div>
+        <div class="touroku" @click="touroku">ログイン画面へ</div>
     </div>
     </div>
   </template>
