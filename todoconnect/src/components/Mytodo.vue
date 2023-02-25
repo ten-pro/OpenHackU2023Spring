@@ -68,7 +68,7 @@
       </div>
     </div>
   </div>
-  <div v-show="swith.complete_page==true">
+  <div v-show="swith.complete_page==true" style="overflow:auto;height:80vh;">
     <div class="return" style="margin-top:1.5vh;">
       <img class="left" src="./PNG/left.png" @click="swith.complete_page=false"/>
     </div>
