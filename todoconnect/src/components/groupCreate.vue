@@ -3,7 +3,7 @@
         <div class="main">
             <a href="/group">
                 <div class="return">
-                    <img class="left" src="./PNG/left.png" />
+                    <img class="left" src="./PNG/leftorange.png" />
                 </div>
             </a>
             <div class="con">
@@ -72,7 +72,7 @@
                     }else{
                         swal("作成成功","グループ一覧画面に遷移します。","success",)
                         .then(function() {
-                            location.href = ""
+                            location.href = "/group"
                         })
                     }
                     console.log(res.data)
@@ -95,7 +95,7 @@
     width:30vw;
     height:6vh;
     background-color: white;
-    border: solid 2px #5AB4BD;
+    border: solid 2px #e58900;
     border-radius: 20px;
   }
  .left{
@@ -103,7 +103,7 @@
     height:4.5vh;
  }
   .arrow {
-    border: 1px solid #5AB4BD;
+    border: 1px solid #e58900;
     background-color: white;
     width: 25vw;
     height: 10vw;
@@ -134,7 +134,7 @@
     font-size: 7vw;
 }
 .gName {
-    border: 1px solid #5AB4BD;
+    border: 1px solid #e58900;
     border-radius: 10px;
     height: 6vh;
     width: 100%;
@@ -156,7 +156,7 @@
     font-size: 7vw;
 }
 .uName {
-    border: 1px solid #5AB4BD;
+    border: 1px solid #e58900;
     border-radius: 10px;
     height: 6vh;
     width: 100%;
@@ -167,18 +167,18 @@
     width: 50px;
     height: 50px;
     border-radius: 100px;
-    border: 1px solid #5AB4BD;
+    border: 1px solid #e58900;
     text-align: center;
     margin: 7% auto 0 auto;
     cursor: pointer;
 }
 .plus {
-    color: #5AB4BD;
+    color: #e58900;
     font-size: 10vw;
     font-weight: bold;
 }
 .create {
-    background-color: #5AB4BD;
+    background-color: #e58900;
     color: white;
     border-radius: 10px;
     padding: 3% 7%;

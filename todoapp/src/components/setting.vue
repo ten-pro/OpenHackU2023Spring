@@ -137,7 +137,7 @@ let deleteUser = () => {
                 .then(function(res){
                         swal('脱退しました。','遷移します。','success')
                         .then(function(){
-                            location.href
+                            location.href="/group"
                         })
                     
                 }

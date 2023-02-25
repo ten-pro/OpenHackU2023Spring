@@ -49,7 +49,7 @@ show2: false})
                     }else{
                         swal("追加成功","グループ一覧画面に遷移します。","success",)
                         .then(function() {
-                            location.href = ""
+                            location.href = "/group"
                         })
                     }
                     console.log(res)

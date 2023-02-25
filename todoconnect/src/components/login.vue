@@ -1,6 +1,6 @@
 <template>
-    <div>
-      <icon />
+    <div class="wrap">
+      <img src="./PNG/icon.png" class="icon">
       <div class="appName">To Do コネクト</div>
         <div class="main">
         <input type="text" placeholder="@mail" class="mail" v-model="userData.mailaddress">
@@ -40,7 +40,7 @@ let loginCheck = () => {
                         userData.loginerror = true
                     }else{
                         sessionStorage.setItem('id',res.data.id);
-                        // location.href
+                        location.href="./home"
                     }
                    console.log(res)
                 })
@@ -56,6 +56,15 @@ const accountCreate = () => {
     font-size: 7vw;
     font-weight: bold;
     margin: 0 auto;
+  }
+  .wrap{
+    width:80vw;
+    margin:auto;
+    text-align: center;
+  }
+  .icon{
+    width:60vw;
+    margin-top:17vh;
   }
   .main {
 

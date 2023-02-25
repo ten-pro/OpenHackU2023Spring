@@ -1,20 +1,18 @@
 <template>
+      <div class="topbutton">
       <a href="/home">
-        <div class="return">
-            <img class="left" src="./PNG/left.png" />
-        </div>
-     </a>
-      <select>
-        <option value="">並び替え</option>
-        <option value="">昇順</option>
-        <option value="">降順</option>
-      </select>
+          <div class="return">
+              <img class="left" src="./PNG/left.png" />
+          </div>
+      </a>
+    </div>
       <div class="tabs">
         <div class="todos">
           <div class="tab_content" id="mi_content" v-for="(mitodo,index) in mitodos" :key="index">
             <div class="mikanryou">
               <h3>{{ mitodo.title }}</h3>
-              <p>期限日：{{ mitodo.day }}</p>
+              <h4>{{ mitodo.name }}</h4>
+              <p>期限日：{{ mitodo.day.slice(0,11) + mitodo.day.slice(19) }}</p>
               <p>ランク：{{ mitodo.rank }}</p>
               <p>ジャンル：{{ mitodo.genre }}</p>
               <p>掲示板許可：{{ mitodo.keiji }}</p>
@@ -61,6 +59,7 @@
               mitodos[i] = {
                 id: res.data[i].todo_id,
                 title: res.data[i].title,
+                name: res.data[i].name,
                 state: res.data[i].state,
                 day: res.data[i].deadline,
                 rank: res.data[i].rank,
@@ -73,6 +72,7 @@
               }
             }
             console.log(mitodos)
+            mitodos.reverse();
           }
         } catch (error) {
   
@@ -89,7 +89,6 @@
     detail[i] = !detail[i]
     sita[i] = !sita[i]
   }
-  
   </script>
   <style scoped>
   select {
@@ -106,18 +105,6 @@
     position: fixed;
     top:20vw;
   }
-  .return{
-      margin-top:3vh;
-      margin-left:5vw;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width:30vw;
-      height:6vh;
-      background-color: white;
-      border: solid 2px #5AB4BD;
-      border-radius: 20px;
-    }
    .left{
       width:15vw;
       height:4.5vh;
@@ -233,6 +220,9 @@
       h3{
         margin-left: 4vw;
       }
+      h4{
+        margin-left: 4vw;
+      }
       p{
         margin-top: 0;
         margin-bottom: 0;
@@ -243,37 +233,37 @@
       .sita{
         width: 5vw;
         position: absolute;
-        top:46vw;
+        bottom:1vw;
         left: 70vw;
       }
       .ue{
         width: 5vw;
         position: absolute;
-        bottom: 2vw;
+        bottom: 1vw;
         left: 70vw;
       }
       .sita1{
         width: 5vw;
         position: absolute;
-        top:46vw;
+        bottom:1vw;
         left: 70vw;
       }
       .ue1{
         width: 5vw;
         position: absolute;
-        bottom: 2vw;
+        bottom: 1vw;
         left: 70vw;
       }
       .sita2{
         width: 5vw;
         position: absolute;
-        top:46vw;
+        bottom:1vw;
         left: 70vw;
       }
       .ue2{
         width: 5vw;
         position: absolute;
-        bottom: 2vw;
+        bottom: 1vw;
         left: 70vw;
       }
       .kari_gazou{
@@ -282,21 +272,24 @@
         padding: 4vw;
       }
   
-  
-  
-      /* ポストの方 */
-      .return{
-    margin-top:3vh;
-    margin-left:5vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+      .topbutton{
+        display: flex;
+        align-items: center;
+        margin-top:1.2vh;
+      }
+.return{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left:5vw;
     width:30vw;
     height:6vh;
     background-color: white;
-    border: solid 2px #5AB4BD;
+    border: solid 2px #5ab4bd;
     border-radius: 20px;
   }
+  
+      /* ポストの方 */
   .left{
     width:15vw;
     height:4.5vh;

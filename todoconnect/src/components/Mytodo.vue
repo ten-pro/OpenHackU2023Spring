@@ -1,15 +1,12 @@
 <template>
   <div v-show="swith.complete_page==false">
-    <a href="/home">
-      <div class="return">
-          <img class="left" src="./PNG/left.png" />
-      </div>
-   </a>
-    <select>
-      <option value="">並び替え</option>
-      <option value="">昇順</option>
-      <option value="">降順</option>
-    </select>
+    <div class="topbutton">
+      <a href="/home">
+          <div class="return">
+              <img class="left" src="./PNG/left.png" />
+          </div>
+      </a>
+    </div>
     <div class="tabs">
       <input id="all" type="radio" name="tab_item" checked @click="mihai()">
       <label class="tab_item" for="all">未完了</label>
@@ -18,14 +15,16 @@
       <input id="design" type="radio" name="tab_item" @click="kanhai()">
       <label class="tab_item" for="design">完了</label>
       <div class="todos">
+        <h3 style="text-align: center;" v-show="nulls.mi && swith.mi">現在未完了TODOはありません</h3>
         <div class="tab_content" id="mi_content" v-for="(mitodo,index) in mitodos" :key="index" v-show="swith.mi">
           <div class="mikanryou">
             <h3>{{ mitodo.title }}</h3>
-            <p>期限日：{{ mitodo.day }}</p>
+            <p :class="{tyouka:date.year>=mitodo.day.slice(0,4) && date.month>=mitodo.day.slice(5,7) && date.day>mitodo.day.slice(8,10)}">期限日：{{ mitodo.day.slice(0,11)+mitodo.day.slice(19) }}</p>
             <p>ランク：{{ mitodo.rank }}</p>
             <p>ジャンル：{{ mitodo.genre }}</p>
             <p>掲示板許可：{{ mitodo.keiji }}</p>
             <p>完了条件：{{ mitodo.jouken }}</p>
+            <p v-show="mitodo.comment!=null">拒否理由：{{ mitodo.comment }}</p>
             <p class="syousai" v-show="detail[index]">詳細：{{ mitodo.shousai }}</p>
             <div class="button_area">
               <button class="button kan" @click="todocomplete(index)">完了</button>
@@ -35,10 +34,11 @@
             <img src="./PNG/ue.png" alt="" class="ue" v-show="ue[index]" @click="kakusu(index)">
           </div>
         </div>
+        <h3 style="text-align: center;" v-show="nulls.kari && swith.kari">現在仮完了TODOはありません</h3>
         <div class="tab_content" id="kari_content" v-for="(karitodo,index) in karitodos" :key="index" v-show="swith.kari">
           <div class="karikanryou">
             <h3>{{ karitodo.title }}</h3>
-            <p>期限日：{{ karitodo.day }}</p>
+            <p :class="{tyouka:date.year>=karitodo.day.slice(0,4) && date.month>=karitodo.day.slice(5,7) && date.day>karitodo.day.slice(8,10)}">期限日：{{ karitodo.day.slice(0,11) + karitodo.day.slice(19) }}</p>
             <p>ランク：{{ karitodo.rank }}</p>
             <p>ジャンル：{{ karitodo.genre }}</p>
             <p>掲示板許可：{{ karitodo.keiji }}</p>
@@ -49,20 +49,18 @@
             <img src="./PNG/ue.png" alt="" class="ue1" v-show="ue[index]" @click="kakusu(index)">
           </div>
         </div>
+        <h3 style="text-align: center;" v-show="nulls.kan && swith.kan">現在完了TODOはありません</h3>
         <div class="tab_content" id="kan_content" v-for="(kantodo,index) in kantodos" :key="index" v-show="swith.kan">
           <div class="kanryou">
             <h3>{{ kantodo.title }}</h3>
-            <p>期限日：{{ kantodo.day }}</p>
+            <p>期限日：{{ kantodo.day.slice(0,11) + kantodo.day.slice(19) }}</p>
             <p>ランク：{{ kantodo.rank }}</p>
             <p>ジャンル：{{ kantodo.genre }}</p>
             <p>掲示板許可：{{ kantodo.keiji }}</p>
             <p>完了条件：{{ kantodo.jouken }}</p>
+            <p v-show="kantodo.comment!=null">承認理由:{{ kantodo.comment }}</p>
             <p class="syousai" v-show="detail[index]">詳細：{{ kantodo.shousai }}</p>
             <img v-show="detail[index]" :src="kantodo.gazou" style="max-width:50vw;max-height:30vh;"/>
-            <div class="button_area2">
-              <button class="button kan">完了</button>
-              <!-- <paper-ripple fit></paper-ripple> -->
-            </div>
             <img src="./PNG/sita.png" alt="" class="sita2" v-show="!sita[index]" @click="zen(index)">
             <img src="./PNG/ue.png" alt="" class="ue2" v-show="ue[index]" @click="kakusu(index)">
           </div>
@@ -71,7 +69,7 @@
     </div>
   </div>
   <div v-show="swith.complete_page==true">
-    <div class="return">
+    <div class="return" style="margin-top:1.5vh;">
       <img class="left" src="./PNG/left.png" @click="swith.complete_page=false"/>
     </div>
     <div class="image_area">
@@ -91,6 +89,7 @@
 </template>
 <script setup>
 import axios from 'axios'
+import swal from 'sweetalert'
 import {reactive} from 'vue'
 import { ref } from "vue";
 let detail = reactive([false])
@@ -110,8 +109,18 @@ let con_data = reactive({
   con_data:"",
   todoid:0,
 })
-
-
+let nulls = reactive({
+  mi:false,
+  kari:false,
+  kan:false,
+})
+let now = new Date()
+let date = reactive({
+    year: now.getFullYear(),
+    month: now.getMonth() + 1,
+    day: now.getDate(),
+    youbi: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][now.getDay()]
+})
 
 const previewSrc = ref("")
 
@@ -122,7 +131,7 @@ const fileInput = ref(null);
 
   axios
     .post('https://mp-class.chips.jp/group_task/main.php', {
-        user_id:2,
+        user_id:sessionStorage.getItem("id"),
         get_user_todolist: ''
     }, {
         headers: {
@@ -144,12 +153,15 @@ const fileInput = ref(null);
               rank: res.data.uncompletion[i].rank,
               jouken: res.data.uncompletion[i].todo_condition,
               shousai: res.data.uncompletion[i].messsage,
+              comment: res.data.uncompletion[i].comment,
               genre: res.data.uncompletion[i].genre.genre_name,
               genre_color: res.data.uncompletion[i].genre.genre_color,
               keiji: res.data.uncompletion[i].permission==1?"許可":"拒否",
             }
             mitodos[i] = kari;
           }
+        }else{
+          nulls.mi=true;
         }
       }catch(error){
 
@@ -174,6 +186,9 @@ const fileInput = ref(null);
           }
           console.log(karitodos)
         }
+        else{
+          nulls.kari=true;
+        }
       } catch (error) {
 
       }
@@ -189,12 +204,16 @@ const fileInput = ref(null);
               rank: res.data.completion[i].rank,
               jouken: res.data.completion[i].todo_condition,
               shousai: res.data.completion[i].messsage,
+              comment: res.data.completion[i].comment,
               genre: res.data.completion[i].genre.genre_name,
               genre_color: res.data.completion[i].genre.genre_color,
               keiji: res.data.completion[i].permission==1?"許可":"拒否",
               gazou: "https://mp-class.chips.jp/group_task" + res.data.completion[i].image_pass.slice(1)
             }
           }
+        }
+        else{
+          nulls.kan=true;
         }
       } catch (error) {
 
@@ -235,19 +254,30 @@ const todocomplete=(i)=>{
 }
 // 削除機能です！！
 const sakujo = (todo_id)=>{
-  axios
-                .post('https://mp-class.chips.jp/group_task/main.php', {
-                    delete_todo: '',
-                    todo_id:todo_id
-                }, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-                .then(function (res) {
-                  location.href = ""
-                    console.log(res.data)
-                })
+  swal({
+    title: "確認",
+    text: "本当に削除してよろしいですか？",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  })
+.then((willDelete) => {
+  if (willDelete) {
+    axios
+      .post('https://mp-class.chips.jp/group_task/main.php', {
+          delete_todo: '',
+          todo_id:todo_id
+      }, {
+          headers: {
+              'Content-Type': 'multipart/form-data'
+          }
+      })
+      .then(function (res) {
+        location.href = ""
+          console.log(res.data)
+      })
+    }
+  })
 }
 
 
@@ -258,7 +288,7 @@ const uploadFile = () => {
   // create FormData object and append file object
   const formData = new FormData();
   formData.append('image', file);
-  formData.append('user_id', 2);
+  formData.append('user_id', sessionStorage.getItem("id"));
     formData.append('todo_id', con_data.id);
     console.log(con_data.id)
 
@@ -267,6 +297,10 @@ const uploadFile = () => {
     .then(response => {
       // handle success response
       console.log(response.data);
+      swal("送信完了","未完了TODOの完了報告を送信しました","success")
+      .then(function(){
+        location.href="./mytodo";
+      })
     })
     .catch(error => {
       // handle error response
@@ -278,14 +312,24 @@ defineExpose({
 });
 
 const previewImage = (obj) => {
+  try{
   const fileReader = new FileReader()
   fileReader.onload = () => {
     previewSrc.value = fileReader.result
   }
   fileReader.readAsDataURL(obj.files[0])
+  }catch(error){
+    swal("エラー","エラーが発生しました。画像を選択し直してください。","error")
+    .then(function(){
+      previewSrc.value="";
+    })
+  }
 }
 </script>
 <style scoped>
+.tyouka{
+  color:red;
+}
 select {
   appearance: none;
   width: 20%;
@@ -300,18 +344,6 @@ select {
   position: fixed;
   top:20vw;
 }
-.return{
-    margin-top:3vh;
-    margin-left:5vw;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width:30vw;
-    height:6vh;
-    background-color: white;
-    border: solid 2px #5AB4BD;
-    border-radius: 20px;
-  }
  .left{
     width:15vw;
     height:4.5vh;
@@ -425,6 +457,7 @@ input[name="tab_item"] {
     }
     h3{
       margin-left: 4vw;
+      margin-bottom: 5vh;
     }
     p{
       margin-top: 0;
@@ -436,37 +469,37 @@ input[name="tab_item"] {
     .sita{
       width: 5vw;
       position: absolute;
-      top:46vw;
+      bottom:1vw;
       left: 70vw;
     }
     .ue{
       width: 5vw;
       position: absolute;
-      bottom: 2vw;
+      bottom: 1vw;
       left: 70vw;
     }
     .sita1{
       width: 5vw;
       position: absolute;
-      top:46vw;
+      bottom:1vw;
       left: 70vw;
     }
     .ue1{
       width: 5vw;
       position: absolute;
-      bottom: 2vw;
+      bottom: 1vw;
       left: 70vw;
     }
     .sita2{
       width: 5vw;
       position: absolute;
-      top:46vw;
+      bottom:1vw;
       left: 70vw;
     }
     .ue2{
       width: 5vw;
       position: absolute;
-      bottom: 2vw;
+      bottom: 1vw;
       left: 70vw;
     }
     .kari_gazou{
@@ -478,18 +511,22 @@ input[name="tab_item"] {
 
 
     /* ポストの方 */
-    .return{
-  margin-top:3vh;
-  margin-left:5vw;
+    .topbutton{
+  display: flex;
+  align-items: center;
+  margin-top:1.2vh;
+}
+.return{
   display: flex;
   justify-content: center;
   align-items: center;
-  width:30vw;
-  height:6vh;
-  background-color: white;
-  border: solid 2px #5AB4BD;
-  border-radius: 20px;
-}
+  margin-left:5vw;
+    width:30vw;
+    height:6vh;
+    background-color: white;
+    border: solid 2px #5AB4BD;
+    border-radius: 20px;
+  }
 .left{
   width:15vw;
   height:4.5vh;

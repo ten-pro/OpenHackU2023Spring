@@ -1,6 +1,6 @@
 <template>
-    <div>
-      <icon />
+    <div class="wrap">
+      <img src="./PNG/icon.png" class="icon">
       <div class="appName">To Do コネクト</div>
         <div class="main">
         <input type="text" placeholder="@mail" class="mail" v-model="userData.mailaddress">
@@ -8,7 +8,7 @@
         <input type="password" placeholder="password" class="password" v-model="userData.password">
         <button class="login" @click="accountCreate">Sign Up</button>
         <div class="error" v-show="userData.error">入力内容を再確認してくだい</div>
-        <div class="touroku" @click="touroku">登録画面へ</div>
+        <div class="touroku" @click="touroku">ログイン画面へ</div>
     </div>
     </div>
   </template>
@@ -40,7 +40,7 @@
                         userData.error = true
                     }else{
                         sessionStorage.setItem('id',res.data);
-                        location.href
+                        location.href="/home"
                     }
                     console.log(res.data)
 
@@ -51,6 +51,15 @@
   }
   </script>
   <style scoped>
+  .wrap{
+    width:80vw;
+    margin:auto;
+    text-align: center;
+  }
+  .icon{
+    width:60vw;
+    margin-top:17vh;
+  }
   .appName {
 display: block;
     text-align: center;
